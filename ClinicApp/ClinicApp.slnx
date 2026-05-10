@@ -1,0 +1,12 @@
+<Solution>
+  <Project Path="ClinicApp.Application/ClinicApp.Application.csproj" />
+  <Project Path="ClinicApp.Database/ClinicApp.Database.csproj" />
+  <Project Path="ClinicApp.Domain/ClinicApp.Domain.csproj" />
+  <Project Path="ClinicApp.Infrastructure/ClinicApp.Infrastructure.csproj" />
+  <Project Path="ClinicApp.Tests.Integration/ClinicApp.Tests.Integration.csproj" />
+  <Project Path="ClinicApp.Tests.Unit/ClinicApp.Tests.Unit.csproj" />
+  <Project Path="ClinicApp.WebApi/ClinicApp.WebApi.csproj" />
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
+</Solution>

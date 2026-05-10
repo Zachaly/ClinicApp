@@ -1,0 +1,15 @@
+services:
+  clinicapp.webapi:
+    image: ${DOCKER_REGISTRY-}clinicappwebapi
+    build:
+      context: .
+      dockerfile: ClinicApp.WebApi/Dockerfile
+    ports:
+      - "5000:8080"
+  clinicapp.database:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    environment: 
+      - "ACCEPT_EULA=Y"
+      - "MSSQL_SA_PASSWORD=Passw0rd!"
+      - "MSSQL_PID=Express"
+      
