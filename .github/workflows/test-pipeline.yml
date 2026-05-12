@@ -1,26 +1,29 @@
-name: Build/Test pipeline
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 10.0.x
-        
-    - name: Restore dependencies
-      run: dotnet restore ./ClinicApp/ClinicApp.slnx
-      
-    - name: Build
-      run: dotnet build ./ClinicApp/ClinicApp.slnx --no-restore
-      
-    - name: Test
-      run: dotnet test ./ClinipApp/ClinicApp.slnx --no-build --verbosity normal
+name: Test pipeline
+pool:
+  vmImage: 'ubuntu-latest' 
+steps:
+  - task: UseDotNet@2
+    inputs:
+      version: '10.x'
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core SDK'
+    inputs:
+      version: 10.x
+      performMultiLevelLookup: true
+  - task: DotNetCoreCLI@2
+    displayName: Restore
+    inputs:
+      command: restore
+      projects: '**/*.csproj'
+  - task: DotNetCoreCLI@2
+    displayName: Build
+    inputs:
+      command: build
+      projects: '**/*.csproj'
+      arguments: '--configuration $(buildConfiguration)''
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: test
+      projects: '**/*.csproj'
+      arguments: '--configuration $(buildConfiguration)'
+
