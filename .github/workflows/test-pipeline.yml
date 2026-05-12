@@ -1,32 +1,26 @@
-trigger:
-  branches:
-    include:
-    - main
+name: .NET Core CI
 
-pool:
-  vmImage: 'ubuntu-latest'
+on:
+  push:
+    branches: [ "main" ]
 
-variables:
-  buildConfiguration: 'Release'
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-steps:
-- task: UseDotNet@2
-  displayName: 'Install .NET SDK 10.x'
-  inputs:
-    version: '10.x'
-    performMultiLevelLookup: true
+    steps:
+    - uses: actions/checkout@v4
 
-- task: DotNetCoreCLI@2
-  displayName: 'Build Projects'
-  inputs:
-    command: 'build'
-    projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.x'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Run Tests'
-  inputs:
-    command: 'test'
-    projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --no-build'
-    publishTestResults: true
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+
+    - name: Test
+      run: dotnet test --no-build --configuration Release --verbosity normal
