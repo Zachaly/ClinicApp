@@ -1,8 +1,9 @@
 name: Test pipeline
-trigger:
-  branches:
-    include:
-    - main
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 pool:
   vmImage: 'ubuntu-latest' 
 steps:
