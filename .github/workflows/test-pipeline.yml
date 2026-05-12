@@ -17,10 +17,10 @@ jobs:
         dotnet-version: 10.0.x
         
     - name: Restore dependencies
-      run: dotnet restore **/*.csproj
+      run: dotnet restore ./ClinicApp/*.csproj
       
     - name: Build
-      run: dotnet build **/*.csproj --no-restore
+      run: dotnet build ./ClinicApp/*.csproj --no-restore
       
     - name: Test
-      run: dotnet test **/*.csproj --no-build --verbosity normal
+      run: dotnet test ./ClinipApp/*.csproj --no-build --verbosity normal
