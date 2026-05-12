@@ -1,4 +1,8 @@
 name: Test pipeline
+trigger:
+  branches:
+    include:
+    - main
 pool:
   vmImage: 'ubuntu-latest' 
 steps:
