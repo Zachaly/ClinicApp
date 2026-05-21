@@ -6,9 +6,9 @@ using Riok.Mapperly.Abstractions;
 namespace ClinicApp.Infrastructure.Mapper;
 
 [Mapper]
-public partial class UserMapper
+public partial class DatabaseUserMapper
 {
     public partial DatabaseUser MapRequestToDatabaseModel(CreateUserRequest request);
     public partial ApplicationUser MapDatabaseModelToUser(DatabaseUser databaseUser);
-    public partial DatabaseUser MapDomainUserToDatabaseModel(ApplicationUser user);
+    public partial DatabaseUser MapApplicationUserToDatabaseModel(ApplicationUser user);
 }

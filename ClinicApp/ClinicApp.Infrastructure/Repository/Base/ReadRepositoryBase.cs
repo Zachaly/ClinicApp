@@ -18,17 +18,10 @@ public abstract class ReadRepositoryBase<TEntity> : IReadRepository<TEntity> whe
     public virtual Task<TEntity?> GetByIdAsync(Guid id)
         => _dbContext.Set<TEntity>().FirstOrDefaultAsync(e => e.Id == id);
 
-    public virtual Task<TModel?> GetByIdAsync<TModel>(Guid id, System.Linq.Expressions.Expression<Func<TEntity, TModel>> selector)
-        => _dbContext.Set<TEntity>()
-            .Where(e => e.Id == id)
-            .Select(selector)
-            .FirstOrDefaultAsync();
-
-    public virtual Task<TModel?> GetByIdAsync<TModel>(Guid id, System.Linq.Expressions.Expression<Func<TEntity, TModel>> selector, List<string> includes)
+    public virtual Task<TEntity?> GetByIdAsync(Guid id, List<string> includes)
         => _dbContext.Set<TEntity>()
             .WithIncludes(includes)
             .Where(e => e.Id == id)
-            .Select(selector)
             .FirstOrDefaultAsync();
 
     public Task<int> GetCountAsync()
@@ -49,19 +42,11 @@ public abstract class ReadRepositoryBase<TEntity, TGetRequest> : ReadRepositoryB
             .AddPagination(request)
             .ToListAsync();
 
-    public virtual Task<List<TModel>> GetAsync<TModel>(TGetRequest request, System.Linq.Expressions.Expression<Func<TEntity, TModel>> selector)
-        => _dbContext.Set<TEntity>()
-            .FilterWithRequest(request)
-            .AddPagination(request)
-            .Select(selector)
-            .ToListAsync();
-
-    public virtual Task<List<TModel>> GetAsync<TModel>(TGetRequest request, System.Linq.Expressions.Expression<Func<TEntity, TModel>> selector, List<string> includes)
+    public virtual Task<List<TEntity>> GetAsync(TGetRequest request, List<string> includes)
         => _dbContext.Set<TEntity>()
             .WithIncludes(includes)
             .FilterWithRequest(request)
             .AddPagination(request)
-            .Select(selector)
             .ToListAsync();
 
     public virtual Task<int> GetCountAsync(TGetRequest request)

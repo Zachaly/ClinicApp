@@ -17,13 +17,13 @@ namespace ClinicApp.Infrastructure.Service;
 public class UserService : IUserService
 {
     private readonly UserManager<DatabaseUser> _userManager;
-    private readonly UserMapper _userMapper;
+    private readonly DatabaseUserMapper _userMapper;
     private readonly AuthConfig _authConfig;
 
     public UserService(UserManager<DatabaseUser> userManager, IOptions<AuthConfig> authConfig)
     {
         _userManager = userManager;
-        _userMapper = new UserMapper();
+        _userMapper = new DatabaseUserMapper();
         _authConfig = authConfig.Value;
     }
 
@@ -48,18 +48,20 @@ public class UserService : IUserService
     public Task<ValidationResponseModel> CreateReceptionistUserAsync(CreateUserRequest request)
         => AddUser(request, AuthClaimNames.Receptionist);
 
-    public async Task<string> GenerateTokenAsync(Guid userId)
+    public async Task<List<Claim>> GetClaimsAsync(Guid userId)
     {
         var user = await _userManager.FindByIdAsync(userId.ToString());
 
-        if(user is null)
+        if (user is null)
         {
-            return "";
+            return [];
         }
 
-        var claims = await _userManager.GetClaimsAsync(user);
-        claims.Add(new Claim("sub", user.Id.ToString()));
+        return (await _userManager.GetClaimsAsync(user)).ToList();
+    }
 
+    public async Task<string> GenerateTokenAsync(Guid userId, List<Claim> claims)
+    {
         var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authConfig.SecretKey));
         var credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
@@ -111,5 +113,51 @@ public class UserService : IUserService
         }
 
         return new ValidationResponseModel();
+    }
+
+    public async Task DeleteUserAsync(Guid userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+
+        if(user is null)
+        {
+            return;
+        }
+
+        await _userManager.DeleteAsync(user);
+    }
+
+    public Task<ResponseModel> AddAdminClaim(Guid userId)
+        => AddClaim(userId, AuthClaimNames.Admin);
+
+    public Task<ResponseModel> AddDoctorClaim(Guid userId)
+        => AddClaim(userId, AuthClaimNames.Doctor);
+
+    public Task<ResponseModel> AddReceptionistClaim(Guid userId)
+        => AddClaim(userId, AuthClaimNames.Receptionist);
+
+    private async Task<ResponseModel> AddClaim(Guid userId, string claim)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        if(user is null)
+        {
+            return new ResponseModel("User not found");
+        }
+
+        var claims = await _userManager.GetClaimsAsync(user);
+
+        if(claims.Any(c => c.Value == claim && c.Type == AuthClaimNames.RoleClaim))
+        {
+            return new ResponseModel();
+        }
+
+        var response = await _userManager.AddClaimAsync(user, new Claim(AuthClaimNames.RoleClaim, claim));
+
+        if(!response.Succeeded)
+        {
+            return new ResponseModel("Failure while adding claim");
+        }
+
+        return new ResponseModel();
     }
 }

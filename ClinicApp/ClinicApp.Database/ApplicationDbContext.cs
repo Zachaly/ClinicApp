@@ -9,6 +9,7 @@ namespace ClinicApp.Database;
 public class ApplicationDbContext : IdentityDbContext<DatabaseUser, IdentityRole<Guid>, Guid>
 {
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+    public DbSet<UserClaim> ApplicationUserClaims { get; set; }
 
     public ApplicationDbContext(DbContextOptions options) : base(options)
     {
@@ -22,6 +23,16 @@ public class ApplicationDbContext : IdentityDbContext<DatabaseUser, IdentityRole
         {
             entity.ToTable("AspNetUsers", t => t.ExcludeFromMigrations());
             entity.HasKey(u => u.Id);
+        });
+
+        builder.Entity<UserClaim>(entity =>
+        {
+            entity.ToTable("AspNetUserClaims", t => t.ExcludeFromMigrations());
+            entity.HasKey(c => c.Id);
+
+            entity.HasOne<ApplicationUser>()
+                  .WithMany(u => u.Claims)
+                  .HasForeignKey(c => c.UserId);
         });
 
         builder.Entity<DatabaseUser>()
