@@ -6,7 +6,15 @@ using ClinicApp.Domain.Entity;
 
 namespace ClinicApp.Database;
 
-public class ApplicationDbContext : IdentityDbContext<DatabaseUser, IdentityRole<Guid>, Guid>
+public class ApplicationDbContext : IdentityDbContext<
+    DatabaseUser,
+    IdentityRole<Guid>,
+    Guid,
+    IdentityUserClaim<Guid>,
+    IdentityUserRole<Guid>,
+    IdentityUserLogin<Guid>,
+    IdentityRoleClaim<Guid>,
+    IdentityUserToken<Guid>>
 {
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     public DbSet<UserClaim> ApplicationUserClaims { get; set; }
@@ -21,13 +29,13 @@ public class ApplicationDbContext : IdentityDbContext<DatabaseUser, IdentityRole
 
         builder.Entity<ApplicationUser>(entity =>
         {
-            entity.ToTable("AspNetUsers", t => t.ExcludeFromMigrations());
+            entity.ToView("vw_ApplicationUsers");
             entity.HasKey(u => u.Id);
         });
 
         builder.Entity<UserClaim>(entity =>
         {
-            entity.ToTable("AspNetUserClaims", t => t.ExcludeFromMigrations());
+            entity.ToView("vw_UserClaims");
             entity.HasKey(c => c.Id);
 
             entity.HasOne<ApplicationUser>()

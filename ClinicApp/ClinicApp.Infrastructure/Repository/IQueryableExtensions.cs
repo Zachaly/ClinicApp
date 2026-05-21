@@ -52,7 +52,7 @@ internal static class IQueryableExtensions
                 ComparisonType.GreaterThan => Expression.GreaterThan(entityPropExpression, requestPropExpression),
                 ComparisonType.Contains => Expression.Call(requestPropExpression, requestProp.Prop.PropertyType.GetMethod("Contains")!,
                     entityPropExpression),
-                ComparisonType.StartsWith => Expression.Call(entityPropExpression, typeof(string).GetMethod("StartsWith")!,
+                ComparisonType.StartsWith => Expression.Call(entityPropExpression, typeof(string).GetMethod("StartsWith", [typeof(string)])!,
                     requestPropExpression),
                 _ => throw new NotImplementedException()
             };

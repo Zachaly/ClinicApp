@@ -30,6 +30,8 @@ namespace ClinicApp.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -194,6 +196,16 @@ namespace ClinicApp.Database.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.Sql(@"
+        CREATE VIEW vw_ApplicationUsers AS
+        SELECT Id, UserName, FirstName, LastName, Email
+        FROM AspNetUsers");
+
+            migrationBuilder.Sql(@"
+        CREATE VIEW vw_UserClaims AS
+        SELECT Id, UserId, ClaimType, ClaimValue
+        FROM AspNetUserClaims");
         }
 
         /// <inheritdoc />
@@ -219,6 +231,9 @@ namespace ClinicApp.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.Sql("DROP VIEW IF EXISTS vw_UserClaims");
+            migrationBuilder.Sql("DROP VIEW IF EXISTS vw_ApplicationUsers");
         }
     }
 }

@@ -6,6 +6,11 @@ public class LoginResponse : ResponseModel
     public string AuthToken { get; set; }
     public List<string> Claims { get; set; }
 
+    public LoginResponse()
+    {
+        
+    }
+
     public LoginResponse(string error) : base(error)
     {
         

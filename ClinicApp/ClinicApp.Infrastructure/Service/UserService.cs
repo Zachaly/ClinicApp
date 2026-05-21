@@ -65,13 +65,20 @@ public class UserService : IUserService
         var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authConfig.SecretKey));
         var credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
-        var token = new JwtSecurityToken(_authConfig.Issuer,
-            _authConfig.Audience, claims,
-            DateTime.UtcNow,
-            DateTime.UtcNow.AddMinutes(_authConfig.TokenLifetimeMinutes),
-            credentials);
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(claims),
+            Issuer = _authConfig.Issuer,
+            Audience = _authConfig.Audience,
+            NotBefore = DateTime.UtcNow,
+            Expires = DateTime.UtcNow.AddMinutes(_authConfig.TokenLifetimeMinutes),
+            SigningCredentials = credentials
+        };
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        var tokenHandler = new JwtSecurityTokenHandler();
+
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        return tokenHandler.WriteToken(token);
     }
 
     private Dictionary<string, string[]> MapIdentityErrors(IdentityResult identityResult)
