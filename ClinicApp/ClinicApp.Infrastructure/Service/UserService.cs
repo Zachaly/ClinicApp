@@ -88,14 +88,26 @@ public class UserService : IUserService
 
         foreach (var e in identityResult.Errors)
         {
-            if (dict.ContainsKey(e.Code))
+            var key = e.Code;
+            if(key.Contains("Password"))
             {
-                dict[e.Code].Add(e.Description);
+                key = "Password";
+            }
+            if(key.Contains("UserName"))
+            {
+                key = "UserName";
+            }
+
+            if (dict.ContainsKey(key))
+            {
+                dict[key].Add(e.Description);
             }
             else
             {
-                dict.Add(e.Code, [e.Description]);
+                dict.Add(key, [e.Description]);
             }
+
+           
         }
 
         return dict.Select(e => new KeyValuePair<string, string[]>(e.Key, e.Value.ToArray())).ToDictionary();

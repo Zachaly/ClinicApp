@@ -37,6 +37,7 @@ public class CreateUserRequestValidatorTests
             Email = "email",
             FirstName = "fname",
             LastName = "lname",
+            UserName = "user"
         };
 
         var result = _validator.Validate(request);
@@ -54,6 +55,7 @@ public class CreateUserRequestValidatorTests
             Email = "email@email.com",
             FirstName = new string('a', len),
             LastName = "lname",
+            UserName = "user"
         };
 
         var result = _validator.Validate(request);
@@ -71,6 +73,25 @@ public class CreateUserRequestValidatorTests
             Email = "email@email.com",
             FirstName = "fname",
             LastName = new string('a', len),
+            UserName = "user"
+        };
+
+        var result = _validator.Validate(request);
+
+        Assert.False(result.IsValid);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(51)]
+    public void InvalidUserNameLength_FailsValidation(int len)
+    {
+        var request = new CreateUserRequest
+        {
+            Email = "email@email.com",
+            FirstName = "fname",
+            LastName = "lname",
+            UserName = new string('a', len)
         };
 
         var result = _validator.Validate(request);

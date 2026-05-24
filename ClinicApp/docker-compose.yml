@@ -6,6 +6,7 @@ services:
       dockerfile: ClinicApp.WebApi/Dockerfile
     ports:
       - "5000:8080"
+      - "5001:8081"
   clinicapp.database:
     image: mcr.microsoft.com/mssql/server:2025-latest
     environment: 
