@@ -18,6 +18,7 @@ public class ApplicationDbContext : IdentityDbContext<
 {
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     public DbSet<UserClaim> ApplicationUserClaims { get; set; }
+    public DbSet<Patient> Patients { get; set; }
 
     public ApplicationDbContext(DbContextOptions options) : base(options)
     {
@@ -53,5 +54,16 @@ public class ApplicationDbContext : IdentityDbContext<
 
         builder.Entity<DatabaseUser>()
             .HasKey(u => u.Id);
+
+        builder.Entity<Patient>(e =>
+        {
+            e.Property(e => e.LastName).HasMaxLength(50);
+            e.Property(e => e.FirstName).HasMaxLength(50);
+            e.Property(e => e.PostalCode).HasMaxLength(6);
+            e.Property(e => e.Address).HasMaxLength(75);
+            e.Property(e => e.City).HasMaxLength(50);
+            e.Property(e => e.PeselNumber).HasMaxLength(11);
+            e.HasQueryFilter(e => e.DeletedOn == null);
+        });
     }
 }
