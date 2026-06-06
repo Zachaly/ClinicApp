@@ -4,6 +4,8 @@ import LoginView from '@/views/LoginView.vue'
 import UserListView from '@/views/UserListView.vue'
 import { claimNames, useAuthStore } from '@/stores/authStore'
 import AddUserView from '@/views/AddUserView.vue'
+import PatientListView from '@/views/PatientListView.vue'
+import PatientView from '@/views/PatientView.vue'
 
 const routeGuard = (claim: string) => (to: RouteLocationNormalizedGeneric, from: RouteLocationNormalizedGeneric) => {
   const authStore = useAuthStore()
@@ -39,6 +41,18 @@ const router = createRouter({
       name: 'add-user',
       component: AddUserView,
       beforeEnter: routeGuard(claimNames.admin)
+    },
+    {
+      path: "/patient",
+      name: 'patients',
+      component: PatientListView,
+      beforeEnter: routeGuard(claimNames.receptionist)
+    },
+    {
+      path: '/patient/:id',
+      name: "patient",
+      component: PatientView,
+      beforeEnter: routeGuard(claimNames.receptionist)
     }
   ],
 })

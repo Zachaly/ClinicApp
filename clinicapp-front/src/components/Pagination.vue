@@ -8,8 +8,8 @@ const props = defineProps<{
 
 <template>
     <nav class="pagination" role="navigation" aria-label="pagination" v-if="pageCount > 0">
-        <span class="pagination-previous" @click="changePage(currentIndex - 1)">Previous</span>
-        <span class="pagination-next" @click="changePage(currentIndex + 1)">Next page</span>
+        <span class="pagination-previous" v-if="currentIndex - 1 > pageCount" @click="changePage(currentIndex - 1)">Previous</span>
+        <span class="pagination-next" v-if="currentIndex + 1 < pageCount" @click="changePage(currentIndex + 1)">Next page</span>
         <ul class="pagination-list">
             <li>
                 <span href="#" class="pagination-link" @click="changePage(0)">1</span>

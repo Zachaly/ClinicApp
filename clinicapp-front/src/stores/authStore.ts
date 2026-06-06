@@ -19,17 +19,24 @@ export const useAuthStore = defineStore("auth", () => {
     axios
       .post<LoginResponse>("/authorization/login", { login, password })
       .then(async (response) => {
+        console.log(response.data)
         axios.defaults.headers['Authorization'] = "Bearer " + response.data.authToken
         const dataResponse = await axios.get<UserModel>(
           "user/" + response.data.userId,
         );
 
         userData.value = dataResponse.data;
+        
         return true
       }).catch((error: AxiosError<LoginResponse>) => {
         alert(error.response?.data.error)
         return false
       });
 
-  return { userData, isAuthorized, authorize };
+  const logout = () => {
+    axios.defaults.headers['Authorization'] = ''
+    userData.value = null
+  }
+
+  return { userData, isAuthorized, authorize, logout };
 });

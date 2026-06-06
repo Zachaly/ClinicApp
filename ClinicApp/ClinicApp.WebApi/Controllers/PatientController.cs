@@ -11,7 +11,7 @@ using Wolverine;
 namespace ClinicApp.WebApi.Controllers;
 
 [Route("api/[controller]")]
-[Authorize(Policy = AuthPolicyNames.RequireReceptionist)]
+[Authorize]
 public class PatientController : ControllerBase
 {
     private readonly IMessageBus _messageBus;
@@ -46,6 +46,7 @@ public class PatientController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = AuthPolicyNames.RequireReceptionist)]
     public async Task<ActionResult<ValidationResponseModel>> Post(AddPatientRequest request)
     {
         var response = await _messageBus.InvokeAsync<ValidationResponseModel>(request);
@@ -54,6 +55,7 @@ public class PatientController : ControllerBase
     }
 
     [HttpPut]
+    [Authorize(Policy = AuthPolicyNames.RequireReceptionist)]
     public async Task<ActionResult<ValidationResponseModel>> Put(UpdatePatientRequest request)
     {
         var response = await _messageBus.InvokeAsync<ValidationResponseModel>(request);
@@ -62,6 +64,7 @@ public class PatientController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Policy = AuthPolicyNames.RequireReceptionist)]
     public async Task<ActionResult<ResponseModel>> DeleteById(Guid id)
     {
         var response = await _messageBus.InvokeAsync<ResponseModel>(new DeletePatientByIdRequest(id));

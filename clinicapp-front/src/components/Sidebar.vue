@@ -1,12 +1,21 @@
 <script lang="ts" setup>
 import { claimNames, useAuthStore } from '@/stores/authStore';
 import { computed } from 'vue';
+import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore()
+const router = useRouter()
 
 const isAdmin = computed(() => authStore.userData?.claims.includes(claimNames.admin))
 const isDoctor = computed(() => authStore.userData?.claims.includes(claimNames.doctor))
 const isReceptionist = computed(() => authStore.userData?.claims.includes(claimNames.receptionist))
+
+const logout = () => {
+    authStore.logout()
+
+    router.clearRoutes()
+    router.push('/login')
+}
 
 </script>
 
@@ -39,7 +48,12 @@ const isReceptionist = computed(() => authStore.userData?.claims.includes(claimN
         </ul>
         <p class="menu-label" v-if="isReceptionist">Receptionist</p>
         <ul class="menu-list" v-if="isReceptionist">
-
+            <li>
+                <RouterLink to="/patient">
+                    Manage patients
+                </RouterLink>
+            </li>
         </ul>
+        <button class="button is-danger" @click="logout">Logout</button>
     </aside>
 </template>
