@@ -1,0 +1,30 @@
+name: .NET Core CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ClinicApp
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.x'
+
+    - name: Restore dependencies
+      run: dotnet restore ClinicApp.slnx
+
+    - name: Build
+      run: dotnet build ClinicApp.slnx --no-restore --configuration Release
+
+    - name: Test
+      run: dotnet test ClinicApp.slnx --no-build --configuration Release --verbosity normal
