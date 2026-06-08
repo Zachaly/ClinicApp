@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-
-namespace ClinicApp.Domain.Entity;
+﻿namespace ClinicApp.Domain.Entity;
 
 public class ApplicationUser : IUser
 {
