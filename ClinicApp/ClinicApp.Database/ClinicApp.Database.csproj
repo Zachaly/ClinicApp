@@ -20,4 +20,8 @@
     <ProjectReference Include="..\ClinicApp.Domain\ClinicApp.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>
