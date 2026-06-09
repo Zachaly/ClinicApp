@@ -6,6 +6,7 @@ using ClinicApp.Domain.Repository;
 using ClinicApp.Domain.Service;
 using ClinicApp.Infrastructure.Authorization;
 using ClinicApp.Infrastructure.Configuration;
+using ClinicApp.Infrastructure.Interceptor;
 using ClinicApp.Infrastructure.Repository;
 using ClinicApp.Infrastructure.Service;
 using FluentValidation;
@@ -22,12 +23,13 @@ public static class BuilderExtensions
 {
     public static WebApplicationBuilder RegisterDatabase(this WebApplicationBuilder builder)
     {
-        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        builder.Services.AddSingleton<SoftDeleteInterceptor>();
+
+        builder.Services.AddDbContext<ApplicationDbContext>((sp, options) =>
         {
             options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
+            options.AddInterceptors(sp.GetRequiredService<SoftDeleteInterceptor>());
         });
-
-        builder.Services.AddValidatorsFromAssemblyContaining<CreateUserRequestValidator>();
 
         return builder;
     }
@@ -41,6 +43,9 @@ public static class BuilderExtensions
 
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+
+        builder.Services.AddValidatorsFromAssemblyContaining<CreateUserRequestValidator>();
 
         return builder;
     }

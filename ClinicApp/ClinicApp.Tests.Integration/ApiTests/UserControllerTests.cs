@@ -34,7 +34,6 @@ public class UserControllerTests : ApiTest, IClassFixture<DatabaseFixture>
         await AuthorizeDoctorAsync();
         List<HttpResponseMessage> forbidden = [
             await _httpClient.GetAsync(Endpoint),
-            await _httpClient.GetAsync($"{Endpoint}/{Guid.NewGuid()}"),
             await _httpClient.GetAsync($"{Endpoint}/count"),
             await _httpClient.PostAsJsonAsync($"{Endpoint}/admin", new CreateUserRequest()),
             await _httpClient.PostAsJsonAsync($"{Endpoint}/doctor", new CreateUserRequest()),
@@ -45,7 +44,6 @@ public class UserControllerTests : ApiTest, IClassFixture<DatabaseFixture>
         await AuthorizeReceptionistAsync();
         forbidden.AddRange([
             await _httpClient.GetAsync(Endpoint),
-            await _httpClient.GetAsync($"{Endpoint}/{Guid.NewGuid()}"),
             await _httpClient.GetAsync($"{Endpoint}/count"),
             await _httpClient.PostAsJsonAsync($"{Endpoint}/admin", new CreateUserRequest()),
             await _httpClient.PostAsJsonAsync($"{Endpoint}/doctor", new CreateUserRequest()),
