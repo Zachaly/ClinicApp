@@ -1,10 +1,8 @@
-﻿namespace ClinicApp.Domain;
+﻿using ClinicApp.Domain.Enum;
+namespace ClinicApp.Domain.Request;
 
-public class AddAppointmentRequest
-{
-    public DateTime CreatedAt {get;set;}
-    public DateTime DateofAppointment {get;set;}
-    public string Doctor {get;set;}=string.Empty;
-    public Guid PatientId {get;set;} 
-    public AppointmentStatus Status {get;set;}
-}
+public record AddAppointmentRequest(
+    DateTime DateOfAppointment,
+    Guid     DoctorId,
+    Guid     PatientId
+);

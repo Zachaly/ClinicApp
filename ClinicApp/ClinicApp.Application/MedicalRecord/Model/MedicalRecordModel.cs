@@ -2,7 +2,9 @@
 
 public class MedicalRecordModel
 {
+    public Guid MedicalRecordId { get; set; }
     public Guid PatientId {get;set;}
+    public Guid DoctorId {get;set;}
     public string DocumentScanUrl{get;set;}=string.Empty;
     public DateTime CreatedAt {get;set;}
     public DateTime? UpdatedAt {get;set;} 

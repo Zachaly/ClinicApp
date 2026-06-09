@@ -1,5 +1,4 @@
-﻿using ClinicApp.Application.Appointment.Handler;
-using ClinicApp.Application.Appointment.Model;
+﻿using ClinicApp.Application.Model;
 using ClinicApp.Domain.Request;
 using ClinicApp.Domain.Response;
 using ClinicApp.Infrastructure.Authorization;
