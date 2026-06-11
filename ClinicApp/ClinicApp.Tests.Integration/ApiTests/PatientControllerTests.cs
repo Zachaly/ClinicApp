@@ -1,5 +1,6 @@
 ﻿using ClinicApp.Application.Model;
-using ClinicApp.Domain.Request;
+using ClinicApp.Domain.Request.Add;
+using ClinicApp.Domain.Request.Update;
 using ClinicApp.Domain.Response;
 using ClinicApp.Tests.Integration.Fixture;
 using Microsoft.EntityFrameworkCore;

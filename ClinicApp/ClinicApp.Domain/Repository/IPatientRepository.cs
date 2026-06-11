@@ -1,5 +1,5 @@
 ﻿using ClinicApp.Domain.Entity;
-using ClinicApp.Domain.Request;
+using ClinicApp.Domain.Request.Get;
 
 namespace ClinicApp.Domain.Repository;
 

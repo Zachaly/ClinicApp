@@ -1,11 +1,11 @@
 ﻿using ClinicApp.Domain.Attribute;
 using ClinicApp.Domain.Entity;
 using ClinicApp.Domain.Enum;
-using ClinicApp.Domain.Request;
 using System.Collections.Immutable;
 using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using ClinicApp.Domain.Request.Get;
 
 namespace ClinicApp.Infrastructure.Repository;
 
@@ -67,6 +67,11 @@ internal static class IQueryableExtensions
 
     public static IQueryable<TEntity> AddPagination<TEntity>(this IQueryable<TEntity> query, PagedRequest pagedRequest)
     {
+        if(pagedRequest.SkipPagination.GetValueOrDefault())
+        {
+            return query;
+        }
+
         var index = pagedRequest.Index ?? 0;
         var pageSize = pagedRequest.PageSize ?? 10;
 

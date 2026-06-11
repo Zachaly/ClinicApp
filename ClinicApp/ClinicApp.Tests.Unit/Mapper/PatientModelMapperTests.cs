@@ -1,6 +1,7 @@
 ﻿using ClinicApp.Application;
 using ClinicApp.Domain.Entity;
 using ClinicApp.Domain.Request;
+using ClinicApp.Domain.Request.Add;
 
 namespace ClinicApp.Tests.Unit.Mapper;
 

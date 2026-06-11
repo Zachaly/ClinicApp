@@ -1,5 +1,5 @@
 ﻿using ClinicApp.Application.Validation;
-using ClinicApp.Domain.Request;
+using ClinicApp.Domain.Request.Update;
 
 namespace ClinicApp.Tests.Unit.Validator;
 

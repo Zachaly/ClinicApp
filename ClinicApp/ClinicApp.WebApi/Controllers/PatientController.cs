@@ -1,6 +1,8 @@
 ﻿using ClinicApp.Application.Handler;
 using ClinicApp.Application.Model;
-using ClinicApp.Domain.Request;
+using ClinicApp.Domain.Request.Add;
+using ClinicApp.Domain.Request.Get;
+using ClinicApp.Domain.Request.Update;
 using ClinicApp.Domain.Response;
 using ClinicApp.Infrastructure.Authorization;
 using ClinicApp.WebApi.Extensions;

@@ -1,7 +1,7 @@
 ﻿using ClinicApp.Application.Handler;
 using ClinicApp.Domain.Entity;
 using ClinicApp.Domain.Repository;
-using ClinicApp.Domain.Request;
+using ClinicApp.Domain.Request.Get;
 using NSubstitute;
 
 namespace ClinicApp.Tests.Unit.Handler.PatientHandler;

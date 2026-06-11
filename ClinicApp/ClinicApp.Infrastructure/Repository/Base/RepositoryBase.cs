@@ -1,7 +1,7 @@
 ﻿using ClinicApp.Database;
 using ClinicApp.Domain.Entity;
 using ClinicApp.Domain.Repository;
-using ClinicApp.Domain.Request;
+using ClinicApp.Domain.Request.Get;
 
 namespace ClinicApp.Infrastructure.Repository.Base;
 
