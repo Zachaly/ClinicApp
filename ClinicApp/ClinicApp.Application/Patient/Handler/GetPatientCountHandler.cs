@@ -1,19 +1,15 @@
-﻿using ClinicApp.Domain.Repository;
+﻿using ClinicApp.Application.Abstraction;
+using ClinicApp.Domain.Entity;
+using ClinicApp.Domain.Repository;
 using ClinicApp.Domain.Request.Get;
 
 namespace ClinicApp.Application.Handler;
 
 public class GetPatientCountRequest : GetPatientRequest;
 
-public class GetPatientCountHandler 
+public class GetPatientCountHandler : GetCountHandler<Patient, GetPatientRequest, GetPatientCountRequest>
 {
-    private readonly IPatientRepository _repository;
-
-    public GetPatientCountHandler(IPatientRepository repository)
+    public GetPatientCountHandler(IPatientRepository repository) : base(repository)
     {
-        _repository = repository;
     }
-
-    public Task<int> Handle(GetPatientCountRequest request)
-        => _repository.GetCountAsync(request);
 }

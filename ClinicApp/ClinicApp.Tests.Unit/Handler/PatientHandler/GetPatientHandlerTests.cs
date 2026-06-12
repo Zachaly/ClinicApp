@@ -27,7 +27,7 @@ public class GetPatientHandlerTests
 
         var request = new GetPatientRequest();
 
-        _repository.GetAsync(request).Returns(entities);
+        _repository.GetAsync(request, Arg.Any<List<string>>()).Returns(entities);
 
         var result = await _handler.Handle(request);
 

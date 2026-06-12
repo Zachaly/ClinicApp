@@ -18,14 +18,14 @@ public interface IReadRepository<TEntity, TGetRequest> : IReadRepository<TEntity
     Task<int> GetCountAsync(TGetRequest request);
 }
 
-public interface IRepository<TEntity> : IReadRepository<TEntity> where TEntity : class, IEntity
+public interface IWriteRepository<TEntity> : IReadRepository<TEntity> where TEntity : class, IEntity
 {
     Task AddAsync(TEntity entity);
     Task DeleteAsync(TEntity entity);
     Task UpdateAsync(TEntity entity);
 }
 
-public interface IRepository<TEntity, TGetRequest> : IRepository<TEntity>, IReadRepository<TEntity, TGetRequest>
+public interface IRepository<TEntity, TGetRequest> : IWriteRepository<TEntity>, IReadRepository<TEntity, TGetRequest>
     where TEntity : class, IEntity
     where TGetRequest : PagedRequest
 {

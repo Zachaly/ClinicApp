@@ -1,14 +1,15 @@
-﻿using ClinicApp.Application.User.Model;
+﻿using ClinicApp.Application.Abstraction;
+using ClinicApp.Application.User.Model;
 using ClinicApp.Domain.Entity;
 using Riok.Mapperly.Abstractions;
 
 namespace ClinicApp.Application.User;
 
 [Mapper]
-public partial class UserModelMapper
+public partial class UserModelMapper : IModelMapper<ApplicationUser, UserModel>
 {
     [MapProperty(nameof(ApplicationUser.Claims), nameof(UserModel.Claims), Use = nameof(MapClaims))]
-    public partial UserModel MapApplicationUserToModel(ApplicationUser user);
+    public partial UserModel MapEntityToModel(ApplicationUser user);
 
     [UserMapping]
     private List<string> MapClaims(List<UserClaim> claims)

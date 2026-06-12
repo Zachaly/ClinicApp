@@ -1,6 +1,6 @@
 ﻿namespace ClinicApp.Domain.Request.Update;
 
-public class UpdatePatientRequest
+public record UpdatePatientRequest : IUpdateRequest
 {
     public Guid Id { get; set; }
     public string FirstName { get; set; }

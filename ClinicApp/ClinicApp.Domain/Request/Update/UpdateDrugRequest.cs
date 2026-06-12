@@ -1,6 +1,6 @@
 ﻿namespace ClinicApp.Domain.Request.Update;
 
-public class UpdateDrugRequest
+public record UpdateDrugRequest : IUpdateRequest
 {
     public Guid Id { get; set; }
     public string BrandName { get; set; }

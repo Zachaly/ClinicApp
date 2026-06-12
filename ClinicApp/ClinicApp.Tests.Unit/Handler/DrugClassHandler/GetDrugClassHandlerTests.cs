@@ -31,7 +31,7 @@ public class GetDrugClassHandlerTests
             new DrugClass { Id = Guid.NewGuid() }
         };
 
-        _repository.GetAsync(request).Returns(entities);
+        _repository.GetAsync(request, Arg.Any<List<string>>()).Returns(entities);
 
         var result = await _handler.Handle(request);
 

@@ -3,9 +3,6 @@ using ClinicApp.Domain.Entity;
 using ClinicApp.Domain.Repository;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ClinicApp.Tests.Unit.Handler.PatientHandler;
 

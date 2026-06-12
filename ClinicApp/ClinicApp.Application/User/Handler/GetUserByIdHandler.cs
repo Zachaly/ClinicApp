@@ -1,25 +1,15 @@
-﻿using ClinicApp.Application.User.Model;
+﻿using ClinicApp.Application.Abstraction;
+using ClinicApp.Application.User.Model;
+using ClinicApp.Domain.Entity;
 using ClinicApp.Domain.Repository;
 
 namespace ClinicApp.Application.User.Handler;
 
-public record GetUserByIdRequest(Guid Id);
+public record GetUserByIdRequest(Guid Id) : GetEntityByIdRequest(Id);
 
-public class GetUserByIdHandler
+public class GetUserByIdHandler : GetEntityByIdHandler<ApplicationUser, UserModel, GetUserByIdRequest>
 {
-    private readonly IUserRepository _repository;
-    private readonly UserModelMapper _mapper;
-
-    public GetUserByIdHandler(IUserRepository repository)
+    public GetUserByIdHandler(IUserRepository repository) : base(repository, new UserModelMapper(), ["Claims"])
     {
-        _repository = repository;
-        _mapper = new UserModelMapper();
-    }
-
-    public async Task<UserModel?> Handle(GetUserByIdRequest request)
-    {
-        var user = await _repository.GetByIdAsync(request.Id, ["Claims"]);
-
-        return user is null ? null : _mapper.MapApplicationUserToModel(user);
     }
 }
