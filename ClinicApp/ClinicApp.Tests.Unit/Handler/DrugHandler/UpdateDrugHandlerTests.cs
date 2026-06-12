@@ -36,7 +36,8 @@ public class UpdateDrugHandlerTests
             BrandName = "bname",
             ClassId = Guid.NewGuid(),
             GenericName = "gname",
-            Id = Guid.NewGuid()
+            Id = Guid.NewGuid(),
+            Price = 123
         };
 
         var entity = new Drug
@@ -59,6 +60,7 @@ public class UpdateDrugHandlerTests
         Assert.Equal(request.BrandName, entity.BrandName);
         Assert.Equal(request.ClassId, entity.ClassId);
         Assert.Equal(request.GenericName, entity.GenericName);
+        Assert.Equal(request.Price, entity.Price);
     }
 
     [Fact]

@@ -23,7 +23,8 @@ public class DrugModelMapperTests
         {
             BrandName = "bname",
             ClassId = Guid.NewGuid(),
-            GenericName = "gname"
+            GenericName = "gname",
+            Price = 123
         };
 
         var entity = _mapper.MapRequestToEntity(request);
@@ -31,6 +32,7 @@ public class DrugModelMapperTests
         Assert.Equal(request.BrandName, entity.BrandName);
         Assert.Equal(request.GenericName, entity.GenericName);
         Assert.Equal(request.ClassId, entity.ClassId);
+        Assert.Equal(request.Price, entity.Price);
     }
 
     [Fact]
@@ -45,6 +47,7 @@ public class DrugModelMapperTests
                 Name = "cname"
             },
             GenericName = "gname",
+            ClassId = Guid.NewGuid()
         };
 
         var model = _mapper.MapEntityToModel(entity);
@@ -53,5 +56,7 @@ public class DrugModelMapperTests
         Assert.Equal(entity.BrandName, model.BrandName);
         Assert.Equal(entity.Class.Name, model.ClassName);
         Assert.Equal(entity.GenericName, model.GenericName);
+        Assert.Equal(entity.Price, model.Price);
+        Assert.Equal(entity.ClassId, model.ClassId);
     }
 }

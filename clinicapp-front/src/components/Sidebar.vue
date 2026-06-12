@@ -46,6 +46,19 @@ const logout = () => {
         <ul class="menu-list" v-if="isDoctor">
 
         </ul>
+        <p class="menu-label" v-if="isReceptionist || isAdmin">Drugs</p>
+        <ul class="menu-list" v-if="isReceptionist || isAdmin">
+            <li>
+                <RouterLink to="/drug-class">
+                    Manage drug classes
+                </RouterLink>
+            </li>
+            <li>
+                <RouterLink to="/drug">
+                    Manage drugs
+                </RouterLink>
+            </li>
+        </ul>
         <p class="menu-label" v-if="isReceptionist">Receptionist</p>
         <ul class="menu-list" v-if="isReceptionist">
             <li>
@@ -53,6 +66,7 @@ const logout = () => {
                     Manage patients
                 </RouterLink>
             </li>
+            
         </ul>
         <button class="button is-danger" @click="logout">Logout</button>
     </aside>

@@ -61,6 +61,7 @@ public class DrugControllerTests : ApiTest
         Assert.Equal(drug.Id, content.Id);
         Assert.Equal(drug.BrandName, content.BrandName);
         Assert.Equal(drugClass.Name, content.ClassName);
+        Assert.Equal(drug.ClassId, content.ClassId);
     }
 
     [Fact]
@@ -107,7 +108,8 @@ public class DrugControllerTests : ApiTest
         {
             ClassId = drugClass.Id,
             BrandName = "bname",
-            GenericName = "gname"
+            GenericName = "gname",
+            Price = 20
         };
 
         await AuthorizeReceptionistAsync();
@@ -116,7 +118,8 @@ public class DrugControllerTests : ApiTest
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         Assert.Contains(_dbContext.Drugs, d => d.ClassId == request.ClassId 
             && d.GenericName == request.GenericName 
-            && d.BrandName == request.BrandName);
+            && d.BrandName == request.BrandName
+            && d.Price == request.Price);
     }
 
     [Fact]
@@ -131,7 +134,8 @@ public class DrugControllerTests : ApiTest
         {
             ClassId = drugClass.Id,
             BrandName = "",
-            GenericName = "gname"
+            GenericName = "gname",
+            Price = 123
         };
 
         await AuthorizeReceptionistAsync();
@@ -142,7 +146,8 @@ public class DrugControllerTests : ApiTest
         Assert.Contains(content.ValidationErrors.Keys, k => k == "BrandName");
         Assert.DoesNotContain(_dbContext.Drugs, d => d.ClassId == request.ClassId
             && d.GenericName == request.GenericName
-            && d.BrandName == request.BrandName);
+            && d.BrandName == request.BrandName
+            && d.Price == request.Price);
     }
 
     [Fact]
@@ -152,7 +157,8 @@ public class DrugControllerTests : ApiTest
         {
             ClassId = Guid.NewGuid(),
             BrandName = "",
-            GenericName = "gname"
+            GenericName = "gname",
+            Price = 123
         };
 
         await AuthorizeReceptionistAsync();
@@ -172,7 +178,8 @@ public class DrugControllerTests : ApiTest
         {
             ClassId = drugClass.Id,
             BrandName = "bname",
-            GenericName = "gname"
+            GenericName = "gname",
+            Price = 123
         };
 
         await _dbContext.AddAsync(new Drug
@@ -180,6 +187,7 @@ public class DrugControllerTests : ApiTest
             BrandName = "bname",
             GenericName = "gname2",
             ClassId = drugClass.Id,
+            Price = 123
         });
         await _dbContext.SaveChangesAsync();
 
@@ -201,6 +209,7 @@ public class DrugControllerTests : ApiTest
             ClassId = drugClasses[0].Id,
             BrandName = "bname",
             GenericName = "gname",
+            Price = 123
         };
 
         await _dbContext.AddAsync(entity);
@@ -211,7 +220,8 @@ public class DrugControllerTests : ApiTest
             Id = entity.Id,
             BrandName = "new bname",
             GenericName = "new gname",
-            ClassId = drugClasses[1].Id
+            ClassId = drugClasses[1].Id,
+            Price = 321
         };
 
         await AuthorizeReceptionistAsync();
@@ -224,6 +234,7 @@ public class DrugControllerTests : ApiTest
         Assert.Equal(entity.ClassId, request.ClassId);
         Assert.Equal(entity.GenericName, request.GenericName);
         Assert.Equal(entity.BrandName, request.BrandName);
+        Assert.Equal(entity.Price, request.Price);
     }
 
     [Fact]
@@ -239,6 +250,7 @@ public class DrugControllerTests : ApiTest
             BrandName = "new bname",
             GenericName = "new gname",
             ClassId = drugClass.Id,
+            Price = 321
         };
 
         await AuthorizeReceptionistAsync();
@@ -260,6 +272,7 @@ public class DrugControllerTests : ApiTest
             ClassId = drugClasses[0].Id,
             BrandName = "bname",
             GenericName = "gname",
+            Price = 123
         };
 
         await _dbContext.AddAsync(entity);
@@ -269,7 +282,8 @@ public class DrugControllerTests : ApiTest
             Id = entity.Id,
             BrandName = "new bname",
             GenericName = "new gname",
-            ClassId = drugClasses[1].Id
+            ClassId = drugClasses[1].Id,
+            Price = 321
         };
 
         await _dbContext.AddAsync(new Drug
@@ -304,6 +318,7 @@ public class DrugControllerTests : ApiTest
             ClassId = drugClasses[0].Id,
             BrandName = "bname",
             GenericName = "gname",
+            Price = 123
         };
 
         await _dbContext.AddAsync(entity);
@@ -314,7 +329,8 @@ public class DrugControllerTests : ApiTest
             Id = entity.Id,
             BrandName = "new bname",
             GenericName = "new gname",
-            ClassId = Guid.NewGuid()
+            ClassId = Guid.NewGuid(),
+            Price = 321
         };
 
         await AuthorizeReceptionistAsync();
@@ -327,6 +343,7 @@ public class DrugControllerTests : ApiTest
         Assert.NotEqual(entity.ClassId, request.ClassId);
         Assert.NotEqual(entity.GenericName, request.GenericName);
         Assert.NotEqual(entity.BrandName, request.BrandName);
+        Assert.NotEqual(entity.Price, request.Price);
     }
 
     [Fact]
@@ -341,6 +358,7 @@ public class DrugControllerTests : ApiTest
             ClassId = drugClasses[0].Id,
             BrandName = "bname",
             GenericName = "gname",
+            Price = 123
         };
 
         await _dbContext.AddAsync(entity);
@@ -351,7 +369,8 @@ public class DrugControllerTests : ApiTest
             Id = entity.Id,
             BrandName = "new bname",
             GenericName = "",
-            ClassId = drugClasses[1].Id
+            ClassId = drugClasses[1].Id,
+            Price = 321
         };
 
         await AuthorizeReceptionistAsync();
@@ -364,6 +383,7 @@ public class DrugControllerTests : ApiTest
         Assert.NotEqual(entity.ClassId, request.ClassId);
         Assert.NotEqual(entity.GenericName, request.GenericName);
         Assert.NotEqual(entity.BrandName, request.BrandName);
+        Assert.NotEqual(entity.Price, request.Price);
         Assert.Contains(content.ValidationErrors.Keys, k => k == "GenericName");
     }
 

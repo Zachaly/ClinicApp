@@ -37,5 +37,6 @@ public static class FakeDataFactory
             .RuleFor(x => x.ClassId, _ => classId)
             .RuleFor(x => x.BrandName, f => f.Random.AlphaNumeric(20))
             .RuleFor(x => x.GenericName, f => f.Random.AlphaNumeric(20))
+            .RuleFor(x => x.Price, f => f.Random.Int(0, 100))
             .Generate(count);
 }

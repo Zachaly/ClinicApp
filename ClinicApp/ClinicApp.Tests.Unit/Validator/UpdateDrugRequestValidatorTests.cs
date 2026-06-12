@@ -18,7 +18,8 @@ public class UpdateDrugRequestValidatorTests
         var request = new UpdateDrugRequest
         {
             BrandName = "bname",
-            GenericName = "gname"
+            GenericName = "gname",
+            Price = 123
         };
 
         var result = _validator.Validate(request);
@@ -34,7 +35,8 @@ public class UpdateDrugRequestValidatorTests
         var request = new UpdateDrugRequest
         {
             BrandName = new string('a', len),
-            GenericName = "gname"
+            GenericName = "gname",
+            Price = 123
         };
 
         var result = _validator.Validate(request);
@@ -50,7 +52,23 @@ public class UpdateDrugRequestValidatorTests
         var request = new UpdateDrugRequest
         {
             BrandName = "bname",
-            GenericName = new string('a', len)
+            GenericName = new string('a', len),
+            Price = 123
+        };
+
+        var result = _validator.Validate(request);
+
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void InvalidPrice_FailsValidation()
+    {
+        var request = new UpdateDrugRequest
+        {
+            BrandName = "bname",
+            GenericName = "gname",
+            Price = -1
         };
 
         var result = _validator.Validate(request);

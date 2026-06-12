@@ -8,4 +8,5 @@ public class Drug : IEntity
 
     public Guid ClassId { get; set; }
     public DrugClass Class { get; set; }
+    public decimal Price { get; set; }
 }

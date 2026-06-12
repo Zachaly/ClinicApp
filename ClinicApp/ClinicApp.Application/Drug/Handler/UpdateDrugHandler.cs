@@ -52,6 +52,7 @@ public class UpdateDrugHandler
         entity.BrandName = request.BrandName;
         entity.GenericName = request.GenericName;
         entity.ClassId = request.ClassId;
+        entity.Price = request.Price;
 
         await _drugRepository.UpdateAsync(entity);
 

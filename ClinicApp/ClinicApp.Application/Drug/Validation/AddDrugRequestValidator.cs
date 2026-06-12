@@ -9,5 +9,6 @@ public class AddDrugRequestValidator : AbstractValidator<AddDrugRequest>
     {
         RuleFor(x => x.GenericName).NotEmpty().MaximumLength(50);
         RuleFor(x => x.BrandName).NotEmpty().MaximumLength(50);
+        RuleFor(x => x.Price).GreaterThan(0);
     }
 }

@@ -1,8 +1,5 @@
 ﻿using ClinicApp.Application.Validation;
 using ClinicApp.Domain.Request.Add;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ClinicApp.Tests.Unit.Validator;
 
@@ -21,7 +18,8 @@ public class AddDrugRequestValidatorTests
         var request = new AddDrugRequest
         {
             BrandName = "bname",
-            GenericName = "gname"
+            GenericName = "gname",
+            Price = 123
         };
 
         var result = _validator.Validate(request);
@@ -37,7 +35,8 @@ public class AddDrugRequestValidatorTests
         var request = new AddDrugRequest
         {
             BrandName = new string('a', len),
-            GenericName = "gname"
+            GenericName = "gname",
+            Price = 123
         };
 
         var result = _validator.Validate(request);
@@ -53,7 +52,23 @@ public class AddDrugRequestValidatorTests
         var request = new AddDrugRequest
         {
             BrandName = "bname",
-            GenericName = new string('a', len)
+            GenericName = new string('a', len),
+            Price = 123
+        };
+
+        var result = _validator.Validate(request);
+
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void InvalidPrice_FailsValidation()
+    {
+        var request = new AddDrugRequest
+        {
+            BrandName = "bname",
+            GenericName = "gname",
+            Price = -1
         };
 
         var result = _validator.Validate(request);
