@@ -81,6 +81,8 @@ public class UpdateDrugClassHandlerTests
 
         var entity = new DrugClass();
 
+        _repository.GetAsync(Arg.Is<GetDrugClassRequest>(r => r.Name == request.Name)).Returns([]);
+
         _repository.GetByIdAsync(request.Id).ReturnsNull();
 
         var response = await _handler.Handle(request);
@@ -98,8 +100,6 @@ public class UpdateDrugClassHandlerTests
         };
 
         var entity = new DrugClass();
-
-        _repository.GetByIdAsync(request.Id).Returns(entity);
 
         _repository.GetAsync(Arg.Is<GetDrugClassRequest>(r => r.Name == request.Name)).Returns([new DrugClass()]);
 

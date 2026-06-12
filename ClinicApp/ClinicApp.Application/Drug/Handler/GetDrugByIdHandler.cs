@@ -1,25 +1,15 @@
-﻿using ClinicApp.Application.Model;
+﻿using ClinicApp.Application.Abstraction;
+using ClinicApp.Application.Model;
+using ClinicApp.Domain.Entity;
 using ClinicApp.Domain.Repository;
 
 namespace ClinicApp.Application.Handler;
 
-public record GetDrugByIdRequest(Guid Id);
+public record GetDrugByIdRequest(Guid Id) : GetEntityByIdRequest(Id);
 
-public class GetDrugByIdHandler
+public class GetDrugByIdHandler : GetEntityByIdHandler<Drug, DrugModel, GetDrugByIdRequest>
 {
-    private readonly IDrugRepository _repository;
-    private readonly DrugModelMapper _mapper;
-
-    public GetDrugByIdHandler(IDrugRepository repository)
+    public GetDrugByIdHandler(IDrugRepository repository) : base(repository, new DrugModelMapper(), ["Class"])
     {
-        _repository = repository;
-        _mapper = new DrugModelMapper();
-    }
-
-    public async Task<DrugModel?> Handle(GetDrugByIdRequest request)
-    {
-        var entity = await _repository.GetByIdAsync(request.Id, ["Class"]);
-
-        return entity is null ? null : _mapper.MapEntityToModel(entity);
     }
 }

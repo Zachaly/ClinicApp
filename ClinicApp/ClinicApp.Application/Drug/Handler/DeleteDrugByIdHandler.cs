@@ -1,30 +1,14 @@
-﻿using ClinicApp.Domain.Repository;
-using ClinicApp.Domain.Response;
+﻿using ClinicApp.Application.Abstraction;
+using ClinicApp.Domain.Entity;
+using ClinicApp.Domain.Repository;
 
 namespace ClinicApp.Application.Handler;
 
-public record DeleteDrugByIdRequest(Guid Id);
+public record DeleteDrugByIdRequest(Guid Id) : DeleteEntityByIdRequest(Id);
 
-public class DeleteDrugByIdHandler
+public class DeleteDrugByIdHandler : DeleteEntityByIdHandler<Drug, DeleteDrugByIdRequest>
 {
-    private readonly IDrugRepository _repository;
-
-    public DeleteDrugByIdHandler(IDrugRepository repository)
+    public DeleteDrugByIdHandler(IDrugRepository repository) : base(repository)
     {
-        _repository = repository;
-    }
-
-    public async Task<ResponseModel> Handle(DeleteDrugByIdRequest request)
-    {
-        var entity = await _repository.GetByIdAsync(request.Id);
-
-        if(entity is null)
-        {
-            return new ResponseModel();
-        }
-
-        await _repository.DeleteAsync(entity);
-
-        return new ResponseModel();
     }
 }

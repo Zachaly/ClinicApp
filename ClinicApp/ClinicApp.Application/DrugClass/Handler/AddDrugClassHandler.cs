@@ -1,4 +1,6 @@
-﻿using ClinicApp.Domain.Repository;
+﻿using ClinicApp.Application.Abstraction;
+using ClinicApp.Domain.Entity;
+using ClinicApp.Domain.Repository;
 using ClinicApp.Domain.Request.Add;
 using ClinicApp.Domain.Request.Get;
 using ClinicApp.Domain.Response;
@@ -6,22 +8,19 @@ using FluentValidation;
 
 namespace ClinicApp.Application.Handler;
 
-public class AddDrugClassHandler
+public class AddDrugClassHandler : AddEntityHandler<DrugClass, AddDrugClassRequest>
 {
-    private readonly IDrugClassRepository _repository;
-    private readonly IValidator<AddDrugClassRequest> _validator;
-    private readonly DrugClassModelMapper _mapper;
+    private readonly IDrugClassRepository _drugClassRepository;
 
-    public AddDrugClassHandler(IDrugClassRepository drugClassRepository, IValidator<AddDrugClassRequest> validator)
+    public AddDrugClassHandler(IDrugClassRepository repository, IValidator<AddDrugClassRequest> validator) 
+        : base(repository, validator, new DrugClassModelMapper())
     {
-        _repository = drugClassRepository;
-        _validator = validator;
-        _mapper = new DrugClassModelMapper();
+        _drugClassRepository = repository;
     }
 
-    public async Task<ValidationResponseModel> Handle(AddDrugClassRequest request)
+    public override async Task<ValidationResponseModel> Handle(AddDrugClassRequest request)
     {
-        var classes = await _repository.GetAsync(new GetDrugClassRequest
+        var classes = await _drugClassRepository.GetAsync(new GetDrugClassRequest
         {
             Name = request.Name,
         });
@@ -31,17 +30,6 @@ public class AddDrugClassHandler
             return new ValidationResponseModel("Name already taken");
         }
 
-        var validation = _validator.Validate(request);
-
-        if(!validation.IsValid)
-        {
-            return new ValidationResponseModel(validation.ToDictionary());
-        }
-
-        var entity = _mapper.MapRequestToEntity(request);
-
-        await _repository.AddAsync(entity);
-
-        return new ValidationResponseModel();
+        return await base.Handle(request);
     }
 }

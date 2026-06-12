@@ -1,4 +1,6 @@
-﻿using ClinicApp.Domain.Repository;
+﻿using ClinicApp.Application.Abstraction;
+using ClinicApp.Domain.Entity;
+using ClinicApp.Domain.Repository;
 using ClinicApp.Domain.Request.Add;
 using ClinicApp.Domain.Request.Get;
 using ClinicApp.Domain.Response;
@@ -6,22 +8,19 @@ using FluentValidation;
 
 namespace ClinicApp.Application.Handler;
 
-public class AddDrugHandler
+public class AddDrugHandler : AddEntityHandler<Drug, AddDrugRequest>
 {
-    private readonly IValidator<AddDrugRequest> _validator;
     private readonly IDrugRepository _drugRepository;
     private readonly IDrugClassRepository _drugClassRepository;
-    private readonly DrugModelMapper _mapper;
 
     public AddDrugHandler(IDrugRepository drugRepository, IDrugClassRepository drugClassRepository, IValidator<AddDrugRequest> validator)
+        : base(drugRepository, validator, new DrugModelMapper())
     {
-        _validator = validator;
         _drugRepository = drugRepository;
         _drugClassRepository = drugClassRepository;
-        _mapper = new DrugModelMapper();
     }
 
-    public async Task<ValidationResponseModel> Handle(AddDrugRequest request)
+    public override async Task<ValidationResponseModel> Handle(AddDrugRequest request)
     {
         var drugClass = await _drugClassRepository.GetByIdAsync(request.ClassId);
 
@@ -37,17 +36,6 @@ public class AddDrugHandler
             return new ValidationResponseModel("Name taken");
         }
 
-        var validation = _validator.Validate(request);
-
-        if(!validation.IsValid)
-        {
-            return new ValidationResponseModel(validation.ToDictionary());
-        }
-
-        var entity = _mapper.MapRequestToEntity(request);
-
-        await _drugRepository.AddAsync(entity);
-
-        return new ValidationResponseModel();
+        return await base.Handle(request);
     }
 }

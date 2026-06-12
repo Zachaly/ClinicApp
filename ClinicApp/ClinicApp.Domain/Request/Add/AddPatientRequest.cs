@@ -1,6 +1,6 @@
 ﻿namespace ClinicApp.Domain.Request.Add;
 
-public class AddPatientRequest
+public record AddPatientRequest
 {
     public string PeselNumber { get; set; }
     public string FirstName { get; set; }

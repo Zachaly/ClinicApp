@@ -1,21 +1,15 @@
-﻿using ClinicApp.Domain.Repository;
+﻿using ClinicApp.Application.Abstraction;
+using ClinicApp.Domain.Entity;
+using ClinicApp.Domain.Repository;
 using ClinicApp.Domain.Request.Get;
 
 namespace ClinicApp.Application.Handler;
 
 public class GetDrugCountRequest : GetDrugRequest;
 
-public class GetDrugCountHandler
+public class GetDrugCountHandler : GetCountHandler<Drug, GetDrugRequest, GetDrugCountRequest>
 {
-    private readonly IDrugRepository _repository;
-
-    public GetDrugCountHandler(IDrugRepository repository)
-    {
-        _repository = repository;
-    }
-
-    public Task<int> Handle(GetDrugCountRequest request)
-    {
-        return _repository.GetCountAsync(request);
+    public GetDrugCountHandler(IDrugRepository repository) : base(repository)
+    { 
     }
 }

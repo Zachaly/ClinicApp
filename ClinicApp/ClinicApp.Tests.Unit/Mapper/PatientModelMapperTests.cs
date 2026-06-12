@@ -15,7 +15,7 @@ public class PatientModelMapperTests
     }
 
     [Fact]
-    public void MapPatientToModel_ReturnsValidModel()
+    public void MapEntityToModel_ReturnsValidModel()
     {
         var entity = new Patient
         {
@@ -29,7 +29,7 @@ public class PatientModelMapperTests
             PostalCode = "12-123"
         };
 
-        var model = _mapper.MapPatientToModel(entity);
+        var model = _mapper.MapEntityToModel(entity);
 
         Assert.Equal(model.Id, entity.Id);
         Assert.Equal(model.Address, entity.Address);

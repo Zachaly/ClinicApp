@@ -1,4 +1,6 @@
-﻿using ClinicApp.Domain.Repository;
+﻿using ClinicApp.Application.Abstraction;
+using ClinicApp.Domain.Entity;
+using ClinicApp.Domain.Repository;
 using ClinicApp.Domain.Request;
 using ClinicApp.Domain.Request.Add;
 using ClinicApp.Domain.Request.Get;
@@ -7,22 +9,19 @@ using FluentValidation;
 
 namespace ClinicApp.Application.Handler;
 
-public class AddPatientHandler
+public class AddPatientHandler : AddEntityHandler<Patient, AddPatientRequest>
 {
-    private readonly IPatientRepository _repository;
-    private readonly IValidator<AddPatientRequest> _validator;
-    private readonly PatientModelMapper _mapper;
+    private readonly IPatientRepository _patientRepository;
 
     public AddPatientHandler(IPatientRepository repository, IValidator<AddPatientRequest> validator)
+        : base(repository, validator, new PatientModelMapper())
     {
-        _repository = repository;
-        _validator = validator;
-        _mapper = new PatientModelMapper();
+        _patientRepository = repository;
     }
 
-    public async Task<ValidationResponseModel> Handle(AddPatientRequest request)
+    public override async Task<ValidationResponseModel> Handle(AddPatientRequest request)
     {
-        var samePeselPatients = await _repository.GetAsync(new GetPatientRequest
+        var samePeselPatients = await _patientRepository.GetAsync(new GetPatientRequest
         {
             PeselNumber = request.PeselNumber
         });
@@ -32,17 +31,6 @@ public class AddPatientHandler
             return new ValidationResponseModel("Patient with this PESEL already present");
         }
 
-        var validation = _validator.Validate(request);
-
-        if(!validation.IsValid)
-        {
-            return new ValidationResponseModel(validation.ToDictionary());
-        }
-
-        var entity = _mapper.MapRequestToEntity(request);
-
-        await _repository.AddAsync(entity);
-
-        return new ValidationResponseModel();
+        return await base.Handle(request);
     }
 }

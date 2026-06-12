@@ -30,7 +30,7 @@ public class GetPatientByIdHandlerTests
 
         var request = new GetPatientByIdRequest(Guid.NewGuid());
 
-        _repository.GetByIdAsync(request.Id).Returns(entity);
+        _repository.GetByIdAsync(request.Id, Arg.Any<List<string>>()).Returns(entity);
 
         var result = await _handler.Handle(request);
 
@@ -42,7 +42,7 @@ public class GetPatientByIdHandlerTests
     {
         var request = new GetPatientByIdRequest(Guid.NewGuid());
 
-        _repository.GetByIdAsync(request.Id).ReturnsNull();
+        _repository.GetByIdAsync(request.Id, Arg.Any<List<string>>()).ReturnsNull();
 
         var result = await _handler.Handle(request);
 

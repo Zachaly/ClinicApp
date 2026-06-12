@@ -13,7 +13,7 @@ public class UserModelMapperTests
     }
 
     [Fact]
-    public void MapApplicationUserToModel_ReturnsCorrectModel()
+    public void MapEntityToModel_ReturnsCorrectModel()
     {
         var applicationUser = new ApplicationUser
         {
@@ -25,7 +25,7 @@ public class UserModelMapperTests
             Id = Guid.NewGuid(),
         };
 
-        var model = _mapper.MapApplicationUserToModel(applicationUser);
+        var model = _mapper.MapEntityToModel(applicationUser);
 
         Assert.Equal(applicationUser.Id, model.Id);
         Assert.Equal(applicationUser.FirstName, model.FirstName);
