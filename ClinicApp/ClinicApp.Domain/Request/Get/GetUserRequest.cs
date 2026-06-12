@@ -1,5 +1,6 @@
 ﻿using ClinicApp.Domain.Attribute;
 using ClinicApp.Domain.Enum;
+using ClinicApp.Domain.Request.Get;
 
 namespace ClinicApp.Domain.Request;
 

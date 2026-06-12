@@ -1,5 +1,7 @@
 ﻿using ClinicApp.Domain.Repository;
 using ClinicApp.Domain.Request;
+using ClinicApp.Domain.Request.Add;
+using ClinicApp.Domain.Request.Get;
 using ClinicApp.Domain.Response;
 using FluentValidation;
 

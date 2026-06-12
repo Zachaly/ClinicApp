@@ -1,6 +1,6 @@
 ﻿using ClinicApp.Domain.Attribute;
 
-namespace ClinicApp.Domain.Request;
+namespace ClinicApp.Domain.Request.Get;
 
 public class PagedRequest
 {
@@ -8,4 +8,6 @@ public class PagedRequest
     public int? Index { get; set; }
     [RequestField(Skip = true)]
     public int? PageSize { get; set; }
+    [RequestField(Skip = true)]
+    public bool? SkipPagination { get; set; }
 }

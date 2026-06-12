@@ -126,6 +126,51 @@ namespace ClinicApp.Database.Migrations
                     b.ToView("vw_ApplicationUsers", (string)null);
                 });
 
+            modelBuilder.Entity("ClinicApp.Domain.Entity.Drug", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("BrandName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<Guid>("ClassId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("GenericName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassId");
+
+                    b.ToTable("Drugs");
+                });
+
+            modelBuilder.Entity("ClinicApp.Domain.Entity.DrugClass", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DrugClasses");
+                });
+
             modelBuilder.Entity("ClinicApp.Domain.Entity.Patient", b =>
                 {
                     b.Property<Guid>("Id")
@@ -329,6 +374,17 @@ namespace ClinicApp.Database.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ClinicApp.Domain.Entity.Drug", b =>
+                {
+                    b.HasOne("ClinicApp.Domain.Entity.DrugClass", "Class")
+                        .WithMany("Drugs")
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Class");
+                });
+
             modelBuilder.Entity("ClinicApp.Domain.Entity.UserClaim", b =>
                 {
                     b.HasOne("ClinicApp.Domain.Entity.ApplicationUser", null)
@@ -392,6 +448,11 @@ namespace ClinicApp.Database.Migrations
             modelBuilder.Entity("ClinicApp.Domain.Entity.ApplicationUser", b =>
                 {
                     b.Navigation("Claims");
+                });
+
+            modelBuilder.Entity("ClinicApp.Domain.Entity.DrugClass", b =>
+                {
+                    b.Navigation("Drugs");
                 });
 #pragma warning restore 612, 618
         }

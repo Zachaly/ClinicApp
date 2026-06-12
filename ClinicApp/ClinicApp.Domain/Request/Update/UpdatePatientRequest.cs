@@ -1,11 +1,10 @@
-﻿namespace ClinicApp.Domain.Request;
+﻿namespace ClinicApp.Domain.Request.Update;
 
-public class AddPatientRequest
+public class UpdatePatientRequest
 {
-    public string PeselNumber { get; set; }
+    public Guid Id { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
-    public DateTimeOffset BirthDate { get; set; }
     public string Address { get; set; }
     public string PostalCode { get; set; }
     public string City { get; set; }

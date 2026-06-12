@@ -1,4 +1,4 @@
-﻿using ClinicApp.Domain.Request;
+﻿using ClinicApp.Domain.Request.Add;
 using FluentValidation;
 
 namespace ClinicApp.Application.Validation;

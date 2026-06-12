@@ -6,9 +6,15 @@ import { claimNames, useAuthStore } from '@/stores/authStore'
 import AddUserView from '@/views/AddUserView.vue'
 import PatientListView from '@/views/PatientListView.vue'
 import PatientView from '@/views/PatientView.vue'
+import DrugClassListView from '@/views/DrugClassListView.vue'
+import DrugListView from '@/views/DrugListView.vue'
 
 const routeGuard = (claim: string) => (to: RouteLocationNormalizedGeneric, from: RouteLocationNormalizedGeneric) => {
   const authStore = useAuthStore()
+
+  if(authStore.userData?.claims.includes(claimNames.admin)) {
+    return true;
+  }
 
   if(!authStore.userData || !authStore.userData.claims.includes(claim)) {
     return { name: 'login' }
@@ -52,6 +58,18 @@ const router = createRouter({
       path: '/patient/:id',
       name: "patient",
       component: PatientView,
+      beforeEnter: routeGuard(claimNames.receptionist)
+    },
+    {
+      path: '/drug-class',
+      name: 'drugClass',
+      component: DrugClassListView,
+      beforeEnter: routeGuard(claimNames.receptionist),
+    },
+    {
+      path: '/drug',
+      name: 'drug',
+      component: DrugListView,
       beforeEnter: routeGuard(claimNames.receptionist)
     }
   ],

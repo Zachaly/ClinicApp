@@ -19,6 +19,8 @@ public class ApplicationDbContext : IdentityDbContext<
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     public DbSet<UserClaim> ApplicationUserClaims { get; set; }
     public DbSet<Patient> Patients { get; set; }
+    public DbSet<Drug> Drugs { get; set; }
+    public DbSet<DrugClass> DrugClasses { get; set; }
 
     public ApplicationDbContext(DbContextOptions options) : base(options)
     {
@@ -64,6 +66,23 @@ public class ApplicationDbContext : IdentityDbContext<
             e.Property(e => e.City).HasMaxLength(50);
             e.Property(e => e.PeselNumber).HasMaxLength(11);
             e.HasQueryFilter(e => e.DeletedOn == null);
+        });
+
+        builder.Entity<DrugClass>(e =>
+        {
+            e.HasMany(c => c.Drugs)
+                .WithOne(d => d.Class)
+                .HasForeignKey(d => d.ClassId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            e.Property(c => c.Name)
+                .HasMaxLength(50);
+        });
+
+        builder.Entity<Drug>(e =>
+        {
+            e.Property(d => d.BrandName).HasMaxLength(50);
+            e.Property(d => d.GenericName).HasMaxLength(50);
         });
     }
 }

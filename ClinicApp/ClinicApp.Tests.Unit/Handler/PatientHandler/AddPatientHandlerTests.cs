@@ -1,7 +1,8 @@
 ﻿using ClinicApp.Application.Handler;
 using ClinicApp.Domain.Entity;
 using ClinicApp.Domain.Repository;
-using ClinicApp.Domain.Request;
+using ClinicApp.Domain.Request.Add;
+using ClinicApp.Domain.Request.Get;
 using FluentValidation;
 using FluentValidation.Results;
 using NSubstitute;

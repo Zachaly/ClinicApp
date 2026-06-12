@@ -1,6 +1,6 @@
 ﻿using ClinicApp.Domain.Attribute;
 
-namespace ClinicApp.Domain.Request;
+namespace ClinicApp.Domain.Request.Get;
 
 public class GetPatientRequest : PagedRequest
 {
