@@ -8,7 +8,7 @@ using System.Net.Http.Json;
 namespace ClinicApp.Tests.Integration.ApiTests;
 
 [Collection(TestCollections.Collection1)]
-public class AuthorizationControllerTests : ApiTest, IClassFixture<DatabaseFixture>
+public class AuthorizationControllerTests : ApiTest
 {
     private const string Endpoint = "api/authorization";
 

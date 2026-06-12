@@ -39,4 +39,11 @@ public static class FakeDataFactory
             .RuleFor(x => x.GenericName, f => f.Random.AlphaNumeric(20))
             .RuleFor(x => x.Price, f => f.Random.Int(0, 100))
             .Generate(count);
+
+    public static List<MedicalProcedure> CreateMedicalProcedures(int count)
+        => new Faker<MedicalProcedure>()
+            .RuleFor(x => x.Cost, f => f.Random.Int(0, 100))
+            .RuleFor(x => x.Description, f => f.Random.Words(20))
+            .RuleFor(x => x.Name, f => f.Random.AlphaNumeric(20))
+            .Generate(count);        
 }

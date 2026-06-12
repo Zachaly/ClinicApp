@@ -66,7 +66,14 @@ const logout = () => {
                     Manage patients
                 </RouterLink>
             </li>
-            
+        </ul>
+        <p class="menu-label" v-if="isReceptionist || isAdmin">Medical procedures</p>
+        <ul class="menu-list" v-if="isReceptionist || isAdmin">
+            <li>
+                <RouterLink to="/medical-procedure">
+                    Manage medical procedures
+                </RouterLink>
+            </li>
         </ul>
         <button class="button is-danger" @click="logout">Logout</button>
     </aside>

@@ -8,6 +8,7 @@ import PatientListView from '@/views/PatientListView.vue'
 import PatientView from '@/views/PatientView.vue'
 import DrugClassListView from '@/views/DrugClassListView.vue'
 import DrugListView from '@/views/DrugListView.vue'
+import MedicalProcedureListView from '@/views/MedicalProcedureListView.vue'
 
 const routeGuard = (claim: string) => (to: RouteLocationNormalizedGeneric, from: RouteLocationNormalizedGeneric) => {
   const authStore = useAuthStore()
@@ -70,6 +71,12 @@ const router = createRouter({
       path: '/drug',
       name: 'drug',
       component: DrugListView,
+      beforeEnter: routeGuard(claimNames.receptionist)
+    },
+    {
+      path: '/medical-procedure',
+      name: 'medical-procedure',
+      component: MedicalProcedureListView,
       beforeEnter: routeGuard(claimNames.receptionist)
     }
   ],

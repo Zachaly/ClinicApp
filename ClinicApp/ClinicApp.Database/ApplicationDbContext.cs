@@ -21,6 +21,7 @@ public class ApplicationDbContext : IdentityDbContext<
     public DbSet<Patient> Patients { get; set; }
     public DbSet<Drug> Drugs { get; set; }
     public DbSet<DrugClass> DrugClasses { get; set; }
+    public DbSet<MedicalProcedure> MedicalProcedures { get; set; }
 
     public ApplicationDbContext(DbContextOptions options) : base(options)
     {
@@ -83,6 +84,12 @@ public class ApplicationDbContext : IdentityDbContext<
         {
             e.Property(d => d.BrandName).HasMaxLength(50);
             e.Property(d => d.GenericName).HasMaxLength(50);
+        });
+
+        builder.Entity<MedicalProcedure>(e =>
+        {
+            e.Property(p => p.Description).HasMaxLength(500);
+            e.Property(p => p.Name).HasMaxLength(50);
         });
     }
 }

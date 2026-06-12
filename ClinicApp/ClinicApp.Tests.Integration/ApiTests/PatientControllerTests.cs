@@ -9,7 +9,7 @@ using System.Net.Http.Json;
 namespace ClinicApp.Tests.Integration.ApiTests;
 
 [Collection(TestCollections.Collection2)]
-public class PatientControllerTests : ApiTest, IClassFixture<DatabaseFixture>
+public class PatientControllerTests : ApiTest
 {
     const string Endpoint = "api/patient";
     public PatientControllerTests(DatabaseFixture fixture) : base(fixture)
