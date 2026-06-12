@@ -4,7 +4,7 @@ import Sidebar from './components/Sidebar.vue';
 </script>
 
 <template>
-  <div class="columns">
+  <div class="columns p-2">
     <div class="column is-narrow">
       <Sidebar />
     </div>

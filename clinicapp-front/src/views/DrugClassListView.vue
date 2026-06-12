@@ -13,11 +13,11 @@ const addRequest = ref<AddDrugClassRequest>({
 })
 const updateRequest = ref<UpdateDrugClassRequest | null>(null)
 
-const validationErrors = ref<{[key: string]: string[]}>({})
+const validationErrors = ref<{ [key: string]: string[] }>({})
 
 
 const loadData = () => {
-    axios.get<DrugClassModel[]>('drugClass', { params: { SkipPagination: true }}).then(response => {
+    axios.get<DrugClassModel[]>('drugClass', { params: { SkipPagination: true } }).then(response => {
         drugClasses.value = response.data
     })
 }
@@ -30,11 +30,11 @@ const addDrugClass = () => {
     }).catch((error: AxiosError<ValidationResponseModel>) => {
         const data = error.response?.data;
 
-        if(data?.error) {
+        if (data?.error) {
             alert(data.error);
         }
 
-        if(data?.validationErrors) {
+        if (data?.validationErrors) {
             validationErrors.value = data.validationErrors;
         }
     })
@@ -60,10 +60,10 @@ const update = () => {
     }).catch((error: AxiosError<ValidationResponseModel>) => {
         const data = error.response?.data
 
-        if(data?.error) {
+        if (data?.error) {
             alert(data.error)
         }
-        if(data?.validationErrors) {
+        if (data?.validationErrors) {
             validationErrors.value = data.validationErrors
         }
     })
@@ -75,7 +75,7 @@ onMounted(() => {
 </script>
 
 <template>
-<div class="columns">
+    <div class="columns">
         <div class="column is-half">
             <table class="table">
                 <thead>
@@ -90,7 +90,8 @@ onMounted(() => {
                             {{ drugClass.name }}
                         </th>
                         <th><button class="button is-danger" @click="deleteDrugClass(drugClass)">Delete</button>
-                        <button class="button is-warning" @click="selectForUpdate(drugClass)">Update</button></th>
+                            <button class="button is-warning" @click="selectForUpdate(drugClass)">Update</button>
+                        </th>
                     </tr>
                 </tbody>
             </table>
