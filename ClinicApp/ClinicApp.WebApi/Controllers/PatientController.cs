@@ -28,7 +28,7 @@ public class PatientController : ControllerBase
     {
         var response = await _messageBus.InvokeAsync<List<PatientModel>>(request);
 
-        return ResponseModelExtensions.ReturnOkOrNotFound(response);
+        return response.ReturnOkOrNotFound();
     }
 
     [HttpGet("{id}")]
@@ -36,7 +36,7 @@ public class PatientController : ControllerBase
     {
         var response = await _messageBus.InvokeAsync<PatientModel?>(new GetPatientByIdRequest(id));
 
-        return ResponseModelExtensions.ReturnOkOrNotFound(response);
+        return response.ReturnOkOrNotFound();
     }
 
     [HttpGet("count")]
@@ -44,7 +44,7 @@ public class PatientController : ControllerBase
     {
         var response = await _messageBus.InvokeAsync<int>(request);
 
-        return ResponseModelExtensions.ReturnOkOrNotFound(response);
+        return response.ReturnOkOrNotFound();
     }
 
     [HttpPost]

@@ -24,36 +24,36 @@ public class UserController : ControllerBase
     [Authorize(Policy = AuthPolicyNames.RequireAdmin)]
     public async Task<ActionResult<List<UserModel>>> Get([FromQuery] GetUserRequest request)
     {
-        var result = await _messageBus.InvokeAsync<List<UserModel>>(request);
+        var response = await _messageBus.InvokeAsync<List<UserModel>>(request);
 
-        return Ok(result);
+        return response.ReturnOkOrNotFound();
     }
 
     [HttpGet("{id}")]
     [Authorize]
     public async Task<ActionResult<UserModel>> GetById(Guid id)
     {
-        var result = await _messageBus.InvokeAsync<UserModel?>(new GetUserByIdRequest(id));
+        var response = await _messageBus.InvokeAsync<UserModel?>(new GetUserByIdRequest(id));
 
-        return ResponseModelExtensions.ReturnOkOrNotFound(result);
+        return response.ReturnOkOrNotFound();
     }
 
     [HttpGet("count")]
     [Authorize(Policy = AuthPolicyNames.RequireAdmin)]
     public async Task<ActionResult<int>> GetCount([FromQuery] GetUserCountRequest request)
     {
-        var result = await _messageBus.InvokeAsync<int>(request);
+        var response = await _messageBus.InvokeAsync<int>(request);
 
-        return Ok(result);
+        return response.ReturnOkOrNotFound();
     }
 
     [HttpPost("admin")]
     [Authorize(Policy = AuthPolicyNames.RequireAdmin)]
     public async Task<ActionResult<ValidationResponseModel>> PostAdmin(CreateAdminUserRequest request)
     {
-        var result = await _messageBus.InvokeAsync<ValidationResponseModel>(request);
+        var response = await _messageBus.InvokeAsync<ValidationResponseModel>(request);
 
-        return result.ReturnCreatedOrBadRequest("user/");
+        return response.ReturnCreatedOrBadRequest("user/");
     }
 
 
@@ -61,26 +61,26 @@ public class UserController : ControllerBase
     [Authorize(Policy = AuthPolicyNames.RequireAdmin)]
     public async Task<ActionResult<ValidationResponseModel>> PostDoctor(CreateDoctorUserRequest request)
     {
-        var result = await _messageBus.InvokeAsync<ValidationResponseModel>(request);
+        var response = await _messageBus.InvokeAsync<ValidationResponseModel>(request);
 
-        return result.ReturnCreatedOrBadRequest("user/");
+        return response.ReturnCreatedOrBadRequest("user/");
     }
 
     [HttpPost("receptionist")]
     [Authorize(Policy = AuthPolicyNames.RequireAdmin)]
     public async Task<ActionResult<ValidationResponseModel>> PostReceptionist(CreateReceptionistUserRequest request)
     {
-        var result = await _messageBus.InvokeAsync<ValidationResponseModel>(request);
+        var response = await _messageBus.InvokeAsync<ValidationResponseModel>(request);
 
-        return result.ReturnCreatedOrBadRequest("user/");
+        return response.ReturnCreatedOrBadRequest("user/");
     }
 
     [HttpDelete("{id}")]
     [Authorize(Policy = AuthPolicyNames.RequireAdmin)]
     public async Task<ActionResult<ResponseModel>> DeleteById(Guid id)
     {
-        var result = await _messageBus.InvokeAsync<ResponseModel>(new DeleteUserByIdRequest(id));
+        var response = await _messageBus.InvokeAsync<ResponseModel>(new DeleteUserByIdRequest(id));
 
-        return result.ReturnNoContentOrBadRequest();
+        return response.ReturnNoContentOrBadRequest();
     }
 }

@@ -46,6 +46,7 @@ public static class BuilderExtensions
         builder.Services.AddScoped<IPatientRepository, PatientRepository>();
         builder.Services.AddScoped<IDrugClassRepository, DrugClassRepository>();
         builder.Services.AddScoped<IDrugRepository, DrugRepository>();
+        builder.Services.AddScoped<IMedicalProcedureRepository, MedicalProcedureRepository>();
 
         builder.Services.AddValidatorsFromAssemblyContaining<CreateUserRequestValidator>();
 

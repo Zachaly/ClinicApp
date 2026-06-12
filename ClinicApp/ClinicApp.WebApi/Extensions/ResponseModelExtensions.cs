@@ -5,7 +5,7 @@ namespace ClinicApp.WebApi.Extensions;
 
 public static class ResponseModelExtensions
 {
-    public static ActionResult ReturnOkOrNotFound<TResponse>(TResponse response)
+    public static ActionResult ReturnOkOrNotFound<TResponse>(this TResponse response)
     {
         if(response is null)
         {

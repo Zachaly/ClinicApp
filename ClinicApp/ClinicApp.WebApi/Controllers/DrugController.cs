@@ -27,7 +27,7 @@ public class DrugController : ControllerBase
     {
         var response = await _messageBus.InvokeAsync<List<DrugModel>>(request);
 
-        return ResponseModelExtensions.ReturnOkOrNotFound(response);
+        return response.ReturnOkOrNotFound();
     }
 
     [HttpGet("{id}")]
@@ -35,7 +35,7 @@ public class DrugController : ControllerBase
     {
         var response = await _messageBus.InvokeAsync<DrugModel>(new GetDrugByIdRequest(id));
 
-        return ResponseModelExtensions.ReturnOkOrNotFound(response);
+        return response.ReturnOkOrNotFound();
     }
 
     [HttpGet("count")]
@@ -43,7 +43,7 @@ public class DrugController : ControllerBase
     {
         var response = await _messageBus.InvokeAsync<int>(request);
 
-        return ResponseModelExtensions.ReturnOkOrNotFound(response);
+        return response.ReturnOkOrNotFound();
     }
 
     [HttpPost]

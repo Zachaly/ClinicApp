@@ -1,58 +1,60 @@
-﻿using ClinicApp.Application.Model;
-using ClinicApp.Domain.Entity;
+﻿using ClinicApp.Application.Handler;
+using ClinicApp.Application.Model;
 using ClinicApp.Domain.Request.Add;
 using ClinicApp.Domain.Request.Update;
 using ClinicApp.Domain.Response;
 using ClinicApp.Tests.Integration.Fixture;
+using Org.BouncyCastle.Ocsp;
 using System.Net;
 using System.Net.Http.Json;
 
 namespace ClinicApp.Tests.Integration.ApiTests;
 
 [Collection(TestCollections.Collection2)]
-public class DrugClassControllerTests : ApiTest
+public class MedicalProcedureControllerTests : ApiTest
 {
-    private const string Endpoint = "api/drugclass";
+    private const string Endpoint = "api/medicalProcedure";
 
-    public DrugClassControllerTests(DatabaseFixture fixture) : base(fixture)
+    public MedicalProcedureControllerTests(DatabaseFixture fixture) : base(fixture)
     {
     }
 
     [Fact]
-    public async Task Get_ReturnsListOfDrugClasses()
+    public async Task Get_ReturnsListOfModels()
     {
-        var classes = FakeDataFactory.CreateDrugClasses(5);
+        var entities = FakeDataFactory.CreateMedicalProcedures(10);
 
-        await _dbContext.AddRangeAsync(classes);
+        await _dbContext.AddRangeAsync(entities);
         await _dbContext.SaveChangesAsync();
 
         await AuthorizeReceptionistAsync();
 
         var response = await _httpClient.GetAsync(Endpoint);
-
-        var content = await response.Content.ReadFromJsonAsync<List<DrugClassModel>>();
+        var content = await response.Content.ReadFromJsonAsync<List<MedicalProcedureModel>>();
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        Assert.Equivalent(classes.Select(x => x.Id), content.Select(x => x.Id));
+        Assert.Equivalent(entities.Select(x => x.Id), content.Select(x => x.Id));
     }
 
     [Fact]
-    public async Task GetById_ReturnsSpecifiedDrugClass()
+    public async Task GetById_ReturnsSpecifiedEntity()
     {
-        var classes = FakeDataFactory.CreateDrugClasses(5);
+        var entities = FakeDataFactory.CreateMedicalProcedures(10);
 
-        await _dbContext.AddRangeAsync(classes);
+        await _dbContext.AddRangeAsync(entities);
         await _dbContext.SaveChangesAsync();
 
-        var expected = classes.Last();
+        var expected = entities[0];
 
         await AuthorizeReceptionistAsync();
 
         var response = await _httpClient.GetAsync($"{Endpoint}/{expected.Id}");
-        var content = await response.Content.ReadFromJsonAsync<DrugClassModel>();
+        var content = await response.Content.ReadFromJsonAsync<MedicalProcedureModel>();
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal(expected.Id, content.Id);
+        Assert.Equal(expected.Cost, content.Cost);
+        Assert.Equal(expected.Description, content.Description);
         Assert.Equal(expected.Name, content.Name);
     }
 
@@ -67,13 +69,11 @@ public class DrugClassControllerTests : ApiTest
     }
 
     [Fact]
-    public async Task GetCount_ReturnsCorrectCount()
+    public async Task GetCount_ReturnsProperCount()
     {
         var count = 20;
 
-        var classes = FakeDataFactory.CreateDrugClasses(count);
-
-        await _dbContext.AddRangeAsync(classes);
+        await _dbContext.AddRangeAsync(FakeDataFactory.CreateMedicalProcedures(count));
         await _dbContext.SaveChangesAsync();
 
         await AuthorizeReceptionistAsync();
@@ -86,10 +86,12 @@ public class DrugClassControllerTests : ApiTest
     }
 
     [Fact]
-    public async Task Post_AddsNewDrugClass()
+    public async Task Post_ValidRequest_AddsNewEntity()
     {
-        var request = new AddDrugClassRequest
+        var request = new AddMedicalProcedureRequest
         {
+            Cost = 123,
+            Description = "desc",
             Name = "name"
         };
 
@@ -98,35 +100,43 @@ public class DrugClassControllerTests : ApiTest
         var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        Assert.Contains(_dbContext.DrugClasses, c => c.Name == request.Name);
+        Assert.Contains(_dbContext.MedicalProcedures, p => p.Name == request.Name
+            && p.Cost == request.Cost
+            && p.Description == request.Description);
     }
 
     [Fact]
     public async Task Post_NameTaken_ReturnsBadRequest()
     {
-        var request = new AddDrugClassRequest
-        {
-            Name = "name"
-        };
+        var entity = FakeDataFactory.CreateMedicalProcedures(1)[0];
 
-        await _dbContext.AddAsync(new DrugClass
-        {
-            Name = request.Name
-        });
+        await _dbContext.AddAsync(entity);
         await _dbContext.SaveChangesAsync();
+
+        var request = new AddMedicalProcedureRequest
+        {
+            Cost = 123,
+            Description = "desc",
+            Name = entity.Name
+        };
 
         await AuthorizeReceptionistAsync();
 
         var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.DoesNotContain(_dbContext.MedicalProcedures, p => p.Name == request.Name
+            && p.Cost == request.Cost
+            && p.Description == request.Description);
     }
 
     [Fact]
     public async Task Post_InvalidRequest_ReturnsBadRequest()
     {
-        var request = new AddDrugClassRequest
+        var request = new AddMedicalProcedureRequest
         {
+            Cost = 123,
+            Description = "desc",
             Name = ""
         };
 
@@ -140,16 +150,18 @@ public class DrugClassControllerTests : ApiTest
     }
 
     [Fact]
-    public async Task Put_UpdatesDrugClass()
+    public async Task Put_ValidRequest_UpdatesEntity()
     {
-        var entity = FakeDataFactory.CreateDrugClasses(1)[0];
+        var entity = FakeDataFactory.CreateMedicalProcedures(1)[0];
 
         await _dbContext.AddAsync(entity);
         await _dbContext.SaveChangesAsync();
 
-        var request = new UpdateDrugClassRequest
+        var request = new UpdateMedicalProcedureRequest
         {
             Id = entity.Id,
+            Cost = 123,
+            Description = "new desc",
             Name = "new name"
         };
 
@@ -160,20 +172,47 @@ public class DrugClassControllerTests : ApiTest
         await _dbContext.Entry(entity).ReloadAsync();
 
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        Assert.Equal(request.Cost, entity.Cost);
+        Assert.Equal(request.Description, entity.Description);
         Assert.Equal(request.Name, entity.Name);
+    }
+
+    [Fact]
+    public async Task Put_NameTakenByAnotherEntity_ReturnsBadRequest()
+    {
+        var entities = FakeDataFactory.CreateMedicalProcedures(2);
+
+        await _dbContext.AddRangeAsync(entities);
+        await _dbContext.SaveChangesAsync();
+
+        var request = new UpdateMedicalProcedureRequest
+        {
+            Id = entities[0].Id,
+            Cost = 123,
+            Description = "new desc",
+            Name = entities[1].Name
+        };
+
+        await AuthorizeReceptionistAsync();
+
+        var response = await _httpClient.PutAsJsonAsync(Endpoint, request);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]
     public async Task Put_InvalidRequest_ReturnsBadRequest()
     {
-        var entity = FakeDataFactory.CreateDrugClasses(1)[0];
+        var entity = FakeDataFactory.CreateMedicalProcedures(1)[0];
 
         await _dbContext.AddAsync(entity);
         await _dbContext.SaveChangesAsync();
 
-        var request = new UpdateDrugClassRequest
+        var request = new UpdateMedicalProcedureRequest
         {
             Id = entity.Id,
+            Cost = 123,
+            Description = "new desc",
             Name = ""
         };
 
@@ -182,44 +221,24 @@ public class DrugClassControllerTests : ApiTest
         var response = await _httpClient.PutAsJsonAsync(Endpoint, request);
         var content = await GetContentFromBadRequestAsync<ValidationResponseModel>(response);
 
-        await _dbContext.Entry(entity).ReloadAsync();
-
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        Assert.NotEqual(request.Name, entity.Name);
         Assert.Contains(content.ValidationErrors.Keys, k => k == "Name");
     }
 
     [Fact]
     public async Task Put_EntityNotFound_ReturnsBadRequest()
     {
-        var request = new UpdateDrugClassRequest
-        {
-            Id = Guid.NewGuid(),
-            Name = "new name"
-        };
+        var entity = FakeDataFactory.CreateMedicalProcedures(1)[0];
 
-        await AuthorizeReceptionistAsync();
-
-        var response = await _httpClient.PutAsJsonAsync(Endpoint, request);
-
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-    }
-
-    [Fact]
-    public async Task Put_NameTaken_ReturnsBadRequest()
-    {
-        var classes = FakeDataFactory.CreateDrugClasses(2);
-
-        var updatedEntity = classes[0];
-
-        await _dbContext.AddAsync(updatedEntity);
-        await _dbContext.AddAsync(classes[1]);
+        await _dbContext.AddAsync(entity);
         await _dbContext.SaveChangesAsync();
 
-        var request = new UpdateDrugClassRequest
+        var request = new UpdateMedicalProcedureRequest
         {
-            Id = updatedEntity.Id,
-            Name = classes[1].Name,
+            Id = entity.Id,
+            Cost = 123,
+            Description = "new desc",
+            Name = ""
         };
 
         await AuthorizeReceptionistAsync();
@@ -227,16 +246,14 @@ public class DrugClassControllerTests : ApiTest
         var response = await _httpClient.PutAsJsonAsync(Endpoint, request);
         var content = await GetContentFromBadRequestAsync<ValidationResponseModel>(response);
 
-        await _dbContext.Entry(updatedEntity).ReloadAsync();
-
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        Assert.NotEqual(request.Name, updatedEntity.Name);
+        Assert.Contains(content.ValidationErrors.Keys, k => k == "Name");
     }
 
     [Fact]
-    public async Task DeleteById_DeletesSpecifiedEntity()
+    public async Task Delete_DeletesSpecifiedEntity()
     {
-        var entity = FakeDataFactory.CreateDrugClasses(1)[0];
+        var entity = FakeDataFactory.CreateMedicalProcedures(1)[0];
 
         await _dbContext.AddAsync(entity);
         await _dbContext.SaveChangesAsync();
@@ -246,6 +263,6 @@ public class DrugClassControllerTests : ApiTest
         var response = await _httpClient.DeleteAsync($"{Endpoint}/{entity.Id}");
 
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
-        Assert.DoesNotContain(_dbContext.DrugClasses, c => c.Id == entity.Id);
+        Assert.DoesNotContain(_dbContext.MedicalProcedures, p => p.Id == entity.Id);
     }
 }
