@@ -46,7 +46,7 @@ public class UpdateDrugHandler
 
         if(!validation.IsValid)
         {
-            return new ValidationResponseModel();
+            return new ValidationResponseModel(validation.ToDictionary());
         }
 
         entity.BrandName = request.BrandName;

@@ -13,7 +13,7 @@ using System.Text;
 
 namespace ClinicApp.Tests.Unit.Handler.DrugHandler;
 
-internal class UpdateDrugHandlerTests
+public class UpdateDrugHandlerTests
 {
     private readonly IDrugRepository _drugRepository;
     private readonly IDrugClassRepository _drugClassRepository;

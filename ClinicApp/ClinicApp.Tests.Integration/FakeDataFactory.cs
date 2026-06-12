@@ -26,4 +26,16 @@ public static class FakeDataFactory
             .RuleFor(r => r.PeselNumber, f => f.Person.Pesel())
             .RuleFor(r => r.PostalCode, f => $"{f.Random.Number(10, 19)}-{f.Random.Number(100, 999)}")
             .Generate(count);
+
+    public static List<DrugClass> CreateDrugClasses(int count)
+        => new Faker<DrugClass>()
+            .RuleFor(x => x.Name, f => f.Random.AlphaNumeric(20))
+            .Generate(count);
+
+    public static List<Drug> CreateDrugs(Guid classId, int count)
+        => new Faker<Drug>()
+            .RuleFor(x => x.ClassId, _ => classId)
+            .RuleFor(x => x.BrandName, f => f.Random.AlphaNumeric(20))
+            .RuleFor(x => x.GenericName, f => f.Random.AlphaNumeric(20))
+            .Generate(count);
 }

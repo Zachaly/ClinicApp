@@ -18,7 +18,7 @@ public class GetDrugByIdHandler
 
     public async Task<DrugModel?> Handle(GetDrugByIdRequest request)
     {
-        var entity = await _repository.GetByIdAsync(request.Id);
+        var entity = await _repository.GetByIdAsync(request.Id, ["Class"]);
 
         return entity is null ? null : _mapper.MapEntityToModel(entity);
     }

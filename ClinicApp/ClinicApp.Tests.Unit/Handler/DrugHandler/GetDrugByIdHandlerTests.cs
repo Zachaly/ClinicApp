@@ -27,7 +27,7 @@ public class GetDrugByIdHandlerTests
             Class = new DrugClass()
         };
 
-        _repository.GetByIdAsync(request.Id).Returns(entity);
+        _repository.GetByIdAsync(request.Id, Arg.Is<List<string>>(l => l.Contains("Class"))).Returns(entity);
 
         var result = await _handler.Handle(request);
 
@@ -40,7 +40,7 @@ public class GetDrugByIdHandlerTests
     {
         var request = new GetDrugByIdRequest(Guid.NewGuid());
 
-        _repository.GetByIdAsync(request.Id).ReturnsNull();
+        _repository.GetByIdAsync(request.Id, Arg.Is<List<string>>(l => l.Contains("Class"))).ReturnsNull();
 
         var result = await _handler.Handle(request);
 

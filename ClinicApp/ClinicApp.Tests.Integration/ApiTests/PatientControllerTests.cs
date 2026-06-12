@@ -3,12 +3,12 @@ using ClinicApp.Domain.Request.Add;
 using ClinicApp.Domain.Request.Update;
 using ClinicApp.Domain.Response;
 using ClinicApp.Tests.Integration.Fixture;
-using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Net.Http.Json;
 
 namespace ClinicApp.Tests.Integration.ApiTests;
 
+[Collection(TestCollections.Collection2)]
 public class PatientControllerTests : ApiTest, IClassFixture<DatabaseFixture>
 {
     const string Endpoint = "api/patient";

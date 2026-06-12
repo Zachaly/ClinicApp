@@ -3,14 +3,12 @@ using ClinicApp.Domain.Request;
 using ClinicApp.Domain.Response;
 using ClinicApp.Infrastructure.Authorization;
 using ClinicApp.Tests.Integration.Fixture;
-using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http.Json;
-using System.Text;
 
 namespace ClinicApp.Tests.Integration.ApiTests;
 
+[Collection(TestCollections.Collection1)]
 public class UserControllerTests : ApiTest, IClassFixture<DatabaseFixture>
 {
     const string Endpoint = "api/user";
@@ -144,8 +142,8 @@ public class UserControllerTests : ApiTest, IClassFixture<DatabaseFixture>
         var response = await _httpClient.GetAsync($"{Endpoint}/count");
         var content = await response.Content.ReadFromJsonAsync<int>();
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        Assert.Equal(count + 1, content);
         //+1 because there also admin created on startup
+        Assert.Equal(count + 1, content);
     }
 
     [Fact]
