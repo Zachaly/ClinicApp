@@ -3,9 +3,7 @@ using ClinicApp.Application.User.Handler;
 using ClinicApp.Database;
 using ClinicApp.Domain.Response;
 using ClinicApp.Tests.Integration.Fixture;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -19,17 +17,7 @@ public abstract class ApiTest : IClassFixture<DatabaseFixture>, IDisposable
 
     protected ApiTest(DatabaseFixture fixture)
     {
-        var webFactory = new WebApplicationFactory<Program>()
-            .WithWebHostBuilder(builder =>
-            {
-                builder.ConfigureAppConfiguration((context, config) =>
-                {
-                    config.AddInMemoryCollection(new Dictionary<string, string?>
-                    {
-                        ["ConnectionStrings:SqlServer"] = fixture.ConnectionString,
-                    });
-                });
-            });
+        var webFactory = new ClinicAppWebApplicationFactory(fixture.ConnectionString);
 
         _httpClient = webFactory.CreateClient();
 

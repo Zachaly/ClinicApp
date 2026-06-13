@@ -1,3 +1,4 @@
+using ClinicApp.WebApi.Background;
 using ClinicApp.WebApi.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,11 +13,10 @@ builder.RegisterDatabase();
 builder.RegisterServices();
 builder.ConfigureAuthorization();
 builder.Services.AddCors();
+builder.Services.AddHostedService<DatabaseInitializationService>();
 
 var app = builder.Build();
 
-app.MigrateDatabase();
-await app.AddDefaultAdmin();
 
 // Configure the HTTP request pipeline.
 

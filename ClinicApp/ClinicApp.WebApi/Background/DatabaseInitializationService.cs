@@ -6,28 +6,29 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-namespace ClinicApp.WebApi.Extensions;
+namespace ClinicApp.WebApi.Background;
 
-public static class WebApplicationExtensions
+public class DatabaseInitializationService : BackgroundService
 {
-    public static void MigrateDatabase(this WebApplication app)
-    {
-        using var scope = app.Services.CreateScope();
+    private readonly IServiceProvider _serviceProvider;
 
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        dbContext.Database.Migrate();
+    public DatabaseInitializationService(IServiceProvider serviceProvider)
+    {
+        _serviceProvider = serviceProvider;
     }
 
-    public static async Task AddDefaultAdmin(this WebApplication app)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        using var scope = app.Services.CreateScope();
+        using var scope = _serviceProvider.CreateScope();
 
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        await dbContext.Database.MigrateAsync();
 
         if(!dbContext.UserClaims.Any(c => c.ClaimValue == AuthClaimNames.Admin))
         {
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<DatabaseUser>>();
-            var adminConf = app.Configuration.GetSection("DefaultAdmin").Get<CreateUserRequest>();
+
+            var adminConf = scope.ServiceProvider.GetRequiredService<IConfiguration>().GetSection("DefaultAdmin").Get<CreateUserRequest>();
 
             var admin = new DatabaseUser
             {
@@ -37,10 +38,9 @@ public static class WebApplicationExtensions
                 FirstName = adminConf.FirstName
             };
             await userManager.CreateAsync(admin);
+
             await userManager.AddPasswordAsync(admin, adminConf.Password);
             await userManager.AddClaimAsync(admin, new Claim(AuthClaimNames.RoleClaim, AuthClaimNames.Admin));
         }
-
-        
     }
 }
